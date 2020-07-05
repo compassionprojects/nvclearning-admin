@@ -7,7 +7,7 @@ services:
       dockerfile: ./docker/Dockerfile
     volumes:
       - ./src:/app
-      - /app/node_modules
+      - node_modules:/app/node_modules
     command: /usr/local/wait-for-it.sh db:5432 -- yarn run dev
     env_file:
       - .env
@@ -34,3 +34,6 @@ services:
 
 networks:
   webnet:
+
+volumes:
+  node_modules:
