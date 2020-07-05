@@ -35,7 +35,7 @@ const access = {
 };
 
 const dateFormat = { format: 'DD/MM/YYYY h:mm A' };
-const plugins = [atTracking(dateFormat), byTracking()];
+const plugins = [atTracking(dateFormat)];
 
 /**
  * Schemas
@@ -52,6 +52,15 @@ exports.User = {
     isAdmin: { type: Checkbox },
     password: {
       type: Password
+    },
+    authToken: {
+      type: Text,
+      access: {
+        create: false,
+        read: true,
+        update: false,
+        delete: false,
+      }
     }
   },
   plugins
