@@ -3,13 +3,27 @@
   "version": "1.0.0",
   "description": "VIC backend development",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "husky": "~4.2.5",
+    "lint-staged": "~10.2.11"
+  },
   "devDependencies": {
     "babel-eslint": "~10.1.0",
     "eslint": "~7.4.0",
     "eslint-config-prettier": "~6.11.0",
     "eslint-plugin-prettier": "~3.1.4",
     "prettier": "~2.0.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
