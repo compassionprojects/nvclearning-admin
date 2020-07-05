@@ -28,14 +28,18 @@ keystone.createList('User', User);
 
 const authStrategy = keystone.createAuthStrategy({
   type: PasswordAuthStrategy,
-  list: 'User'
+  list: 'User',
 });
 
 module.exports = {
   keystone,
-  apps: [new GraphQLApp(), new AdminUIApp({
-    enableDefaultRoute: false,
-    authStrategy,
-    isAccessAllowed: ({ authentication: { item: user } }) => !!user && !!user.isAdmin
-  })],
+  apps: [
+    new GraphQLApp(),
+    new AdminUIApp({
+      enableDefaultRoute: false,
+      authStrategy,
+      isAccessAllowed: ({ authentication: { item: user } }) =>
+        !!user && !!user.isAdmin,
+    }),
+  ],
 };
