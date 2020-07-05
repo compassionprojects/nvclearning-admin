@@ -1,6 +1,6 @@
-FROM node:12.10.0-alpine
+FROM node:12.16.1-alpine
 
-COPY . /app
+COPY src /app
 WORKDIR /app
 
 RUN apk add --no-cache build-base python2 bash yarn && \

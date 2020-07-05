@@ -6,9 +6,9 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile
     volumes:
-      - .:/app
+      - ./src:/app
       - /app/node_modules
-    command: /usr/local/wait-for-it.sh db:5432 -- yarn dev
+    command: /usr/local/wait-for-it.sh db:5432 -- yarn run dev
     env_file:
       - .env
     ports:
