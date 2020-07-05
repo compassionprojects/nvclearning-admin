@@ -1,0 +1,30 @@
+{
+  "name": "vic",
+  "description": "Virtual Intensive Course backend platform",
+  "private": true,
+  "version": "5.0.7",
+  "author": "Madhusudhan Srinivasa <madhu@nomaddev.co>",
+  "repository": "https://github.com/keystonejs/keystone/tree/master/packages/create-keystone-app/example-projects/blank",
+  "homepage": "https://github.com/keystonejs/keystone",
+  "license": "MIT",
+  "engines": {
+    "node": "12.16.1"
+  },
+  "scripts": {
+    "dev": "nodemon --exec 'knex migrate:latest && keystone dev'",
+    "build": "keystone build",
+    "start": "knex migrate:latest && keystone start",
+    "create-tables": "cross-env keystone create-tables"
+  },
+  "dependencies": {
+    "@keystonejs/adapter-knex": "~10.1.0",
+    "@keystonejs/app-admin-ui": "^7.0.2",
+    "@keystonejs/app-graphql": "^5.1.8",
+    "@keystonejs/keystone": "^11.0.0",
+    "cross-env": "^7.0.0"
+  },
+  "devDependencies": {
+    "dotenv": "~8.2.0",
+    "nodemon": "^2.0.4"
+  }
+}
