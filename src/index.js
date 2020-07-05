@@ -5,11 +5,13 @@ const { GraphQLApp } = require('@keystonejs/app-graphql');
 const { AdminUIApp } = require('@keystonejs/app-admin-ui');
 const { KnexAdapter: Adapter } = require('@keystonejs/adapter-knex');
 const { PasswordAuthStrategy } = require('@keystonejs/auth-password');
+const session = require('express-session');
 const { User } = require('./schema');
 
 const PROJECT_NAME = 'vic';
 const knexOptions = require('./knexfile');
 const adapterConfig = { knexOptions };
+const KnexSessionStore = require('connect-session-knex')(session);
 
 /**
  * You've got a new KeystoneJS Project! Things you might want to do next:
@@ -21,6 +23,10 @@ const keystone = new Keystone({
   name: PROJECT_NAME,
   cookieSecret: process.env.COOKIE_SECRET,
   adapter: new Adapter(adapterConfig),
+  sessionStore: new KnexSessionStore({
+    knex: require('knex')(knexOptions),
+    tablename: 'user_sessions', // optional. Defaults to 'sessions'
+  }),
 });
 
 // create our app entities / data structure
