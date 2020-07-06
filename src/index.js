@@ -12,7 +12,7 @@ const PROJECT_NAME = 'vic';
 const knexOptions = require('./knexfile');
 const adapterConfig = { knexOptions };
 const KnexSessionStore = require('connect-session-knex')(session);
-// const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'production';
 
 /**
  * You've got a new KeystoneJS Project! Things you might want to do next:
@@ -23,6 +23,9 @@ const KnexSessionStore = require('connect-session-knex')(session);
 const keystone = new Keystone({
   name: PROJECT_NAME,
   cookieSecret: process.env.COOKIE_SECRET,
+  cookie: {
+    secure: isProduction,
+  },
   adapter: new Adapter(adapterConfig),
   sessionStore: new KnexSessionStore({
     knex: require('knex')(knexOptions),
@@ -49,4 +52,7 @@ module.exports = {
         !!user && !!user.isAdmin,
     }),
   ],
+  configureExpress: (app) => {
+    app.set('trust proxy', 1);
+  },
 };
