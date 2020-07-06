@@ -42,5 +42,5 @@ dc exec api yarn run knex migrate:latest
 ## Deployment
 
 ```
-git push heroku `git subtree split --prefix src master`:master --force
+git push heroku `git subtree split --prefix src master`:master
 ```
