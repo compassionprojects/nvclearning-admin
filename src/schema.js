@@ -25,7 +25,7 @@ const access = {
 };
 */
 
-const dateFormat = { format: 'DD/MM/YYYY h:mm A' };
+const dateFormat = { format: 'dd/MM/yyyy h:mm a' };
 const plugins = [atTracking(dateFormat)];
 
 /**
