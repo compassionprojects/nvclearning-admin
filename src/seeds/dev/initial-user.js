@@ -1,10 +1,8 @@
 const bcrypt = require('bcrypt');
-const crypto = require('crypto');
 const salt = bcrypt.genSaltSync(10);
 const hash = bcrypt.hashSync(process.env.ADMIN_PASSWORD, salt);
 const createdAt_utc = new Date().toISOString();
 const createdAt_offset = '+00:00';
-const authToken = crypto.randomBytes(32).toString('hex');
 
 exports.seed = function (knex) {
   // Deletes ALL existing entries
@@ -22,7 +20,6 @@ exports.seed = function (knex) {
           createdAt_offset,
           updatedAt_utc: createdAt_utc,
           updatedAt_offset: createdAt_offset,
-          authToken,
         },
       ]);
     });
