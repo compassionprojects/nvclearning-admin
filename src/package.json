@@ -21,6 +21,7 @@
     "@keystonejs/app-admin-ui": "^7.0.2",
     "@keystonejs/app-graphql": "^5.1.8",
     "@keystonejs/auth-password": "^5.1.10",
+    "@keystonejs/email": "^5.1.5",
     "@keystonejs/fields": "^13.0.2",
     "@keystonejs/fields-wysiwyg-tinymce": "^5.3.2",
     "@keystonejs/keystone": "^11.0.0",
@@ -29,7 +30,9 @@
     "connect-session-knex": "^1.7.3",
     "cross-env": "^7.0.0",
     "express-session": "^1.17.1",
-    "knex": "^0.21.1"
+    "knex": "^0.21.1",
+    "react": "^16.13.1",
+    "uuid": "^8.2.0"
   },
   "devDependencies": {
     "dotenv": "~8.2.0",
