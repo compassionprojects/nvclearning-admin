@@ -44,15 +44,6 @@ exports.User = {
     password: {
       type: Password,
     },
-    authToken: {
-      type: Text,
-      access: {
-        create: false,
-        read: true,
-        update: false,
-        delete: false,
-      },
-    },
   },
   plugins,
 };
