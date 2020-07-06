@@ -23,7 +23,6 @@ const KnexSessionStore = require('connect-session-knex')(session);
 const keystone = new Keystone({
   name: PROJECT_NAME,
   cookieSecret: process.env.COOKIE_SECRET,
-  secureCookies: false,
   adapter: new Adapter(adapterConfig),
   sessionStore: new KnexSessionStore({
     knex: require('knex')(knexOptions),
@@ -39,16 +38,10 @@ const authStrategy = keystone.createAuthStrategy({
   list: 'User',
 });
 
-const apollo = {
-  introspection: true,
-  playground: true,
-  cors: false,
-};
-
 module.exports = {
   keystone,
   apps: [
-    new GraphQLApp({ apollo }),
+    new GraphQLApp(),
     new AdminUIApp({
       enableDefaultRoute: false,
       authStrategy,
