@@ -39,10 +39,16 @@ const authStrategy = keystone.createAuthStrategy({
   list: 'User',
 });
 
+const apollo = {
+  introspection: true,
+  playground: true,
+  cors: false,
+};
+
 module.exports = {
   keystone,
   apps: [
-    new GraphQLApp(),
+    new GraphQLApp({ apollo }),
     new AdminUIApp({
       enableDefaultRoute: false,
       authStrategy,
