@@ -4,10 +4,11 @@ const {
   DateTime,
   Checkbox,
   Password,
+  Uuid,
 } = require('@keystonejs/fields');
 const { atTracking /* byTracking */ } = require('@keystonejs/list-plugins');
 const { v4: uuid } = require('uuid');
-const sendEmail = require('./emails');
+const { sendEmail } = require('./emails');
 
 // const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce');
 // const { graphql } = require('graphql');
@@ -19,10 +20,6 @@ const sendEmail = require('./emails');
 const userIsAdmin = ({ authentication: { item: user } }) =>
   Boolean(user && user.isAdmin);
 const userIsAuthenticated = ({ authentication: { item } }) => !!item;
-const access = {
-  userIsAdmin,
-  userIsAuthenticated,
-};
 
 const dateFormat = { format: 'dd/MM/yyyy h:mm a' };
 const plugins = [atTracking(dateFormat)];
@@ -32,12 +29,19 @@ const plugins = [atTracking(dateFormat)];
  */
 
 exports.User = {
+  access: {
+    create: userIsAdmin,
+    read: userIsAuthenticated,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
   fields: {
     name: { type: Text },
     email: {
       type: Text,
       isUnique: true,
       isRequired: true,
+      access: { read: userIsAuthenticated },
     },
     isAdmin: { type: Checkbox },
     password: {
@@ -47,33 +51,33 @@ exports.User = {
   plugins,
 };
 
-exports.ForgottenPasswordToken = {
+exports.AuthToken = {
   access: {
     create: true,
     read: true,
-    update: access.userIsAdmin,
-    delete: access.userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
   },
   fields: {
     user: {
       type: Relationship,
       ref: 'User',
-      access: {
-        read: access.userIsAdmin,
-      },
+      // access: { read: userIsAdmin },
     },
     token: {
-      type: Text,
+      type: Uuid,
       isRequired: true,
       isUnique: true,
-      access: {
-        read: access.userIsAdmin,
-      },
+      access: { read: userIsAdmin, update: false },
     },
-    requestedAt: { type: DateTime, isRequired: true },
-    accessedAt: { type: DateTime },
-    expiresAt: { type: DateTime, isRequired: true },
+    expiresAt: {
+      type: DateTime,
+      isRequired: true,
+      access: { read: userIsAdmin, update: false },
+    },
+    invalid: { type: Checkbox, defaultValue: false },
   },
+  plugins,
   hooks: {
     afterChange: async ({ context, updatedItem, existingItem }) => {
       if (existingItem) return null;
@@ -84,11 +88,11 @@ exports.ForgottenPasswordToken = {
         context: context.createContext({ skipAccessControl: true }),
         query: `
         query GetUserAndToken($user: ID!, $now: DateTime!) {
-          User( where: { id: $user }) {
+          user: User( where: { id: $user }) {
             id
             email
           }
-          allForgottenPasswordTokens( where: { user: { id: $user }, expiresAt_gte: $now }) {
+          allAuthTokens( where: { user: { id: $user }, expiresAt_gte: $now, invalid: false }) {
             token
             expiresAt
           }
@@ -98,28 +102,27 @@ exports.ForgottenPasswordToken = {
       });
 
       if (errors) {
-        console.error(errors, 'Unable to construct password updated email.');
+        console.error(errors, 'Unable to construct magic sign-in email.');
         return;
       }
 
-      const { allForgottenPasswordTokens, User } = data;
-      const forgotPasswordKey = allForgottenPasswordTokens[0].token;
+      const { allAuthTokens, user } = data;
+      const authToken = allAuthTokens[0].token;
       const url = process.env.SERVER_URL || 'http://localhost:3000';
 
       const props = {
-        forgotPasswordUrl: `${url}/change-password?key=${forgotPasswordKey}`,
-        recipientEmail: User.email,
+        signInUrl: `${url}/signin?token=${authToken}`,
+        recipientEmail: user.email,
       };
 
       const options = {
-        subject: 'Request for password reset',
-        to: User.email,
-        from: process.env.MAILGUN_FROM,
-        domain: process.env.MAILGUN_DOMAIN,
-        apiKey: process.env.MAILGUN_API_KEY,
+        subject: 'Request for sign-in',
+        to: user.email,
+        from: process.env.MANDRILL_FROM,
+        apiKey: process.env.MANDRILL_API_KEY,
       };
 
-      await sendEmail('forgot-password.jsx', props, options);
+      await sendEmail('sign-in.jsx', props, options);
     },
   },
 };
@@ -127,16 +130,14 @@ exports.ForgottenPasswordToken = {
 exports.customSchema = {
   mutations: [
     {
-      schema: 'startPasswordRecovery(email: String!): ForgottenPasswordToken',
+      schema: 'startMagicSignIn(email: String!): AuthToken',
       resolver: async (obj, { email }, context) => {
         const token = uuid();
 
         const tokenExpiration =
-          parseInt(process.env.RESET_PASSWORD_TOKEN_EXPIRY) ||
-          1000 * 60 * 60 * 24;
+          parseInt(process.env.AUTH_TOKEN_EXPIRY) || 1000 * 60 * 60 * 24;
 
         const now = Date.now();
-        const requestedAt = new Date(now).toISOString();
         const expiresAt = new Date(now + tokenExpiration).toISOString();
 
         const {
@@ -156,11 +157,10 @@ exports.customSchema = {
         });
 
         if (userErrors || !userData.allUsers || !userData.allUsers.length) {
-          console.error(
-            userErrors,
-            'Unable to find user when trying to create forgotten password token.'
-          );
-          return;
+          const errMsgNoUser =
+            'Unable to find user when trying to the create magic sign-in link.';
+          console.error(userErrors, errMsgNoUser);
+          throw new Error(errMsgNoUser);
         }
 
         const userId = userData.allUsers[0].id;
@@ -168,32 +168,37 @@ exports.customSchema = {
         const result = {
           userId,
           token,
-          requestedAt,
           expiresAt,
         };
 
-        const { errors } = await context.executeGraphQL({
-          context: context.createContext({ skipAccessControl: true }),
+        const { errors, data } = await context.executeGraphQL({
+          context,
           query: `
-            mutation createForgottenPasswordToken(
+            mutation createAuthToken(
               $userId: ID!,
               $token: String,
-              $requestedAt: DateTime,
               $expiresAt: DateTime,
             ) {
-              createForgottenPasswordToken(data: {
+              authToken: createAuthToken(data: {
                 user: { connect: { id: $userId }},
                 token: $token,
-                requestedAt: $requestedAt,
                 expiresAt: $expiresAt,
               }) {
                 id
                 token
+                invalid
                 user {
                   id
+                  name
+                  email
+                  createdAt
+                  updatedAt
+                  password_is_set
+                  isAdmin
                 }
-                requestedAt
                 expiresAt
+                createdAt
+                updatedAt
               }
             }
           `,
@@ -201,26 +206,27 @@ exports.customSchema = {
         });
 
         if (errors) {
-          console.error(errors, 'Unable to create forgotten password token.');
-          return;
+          console.error(errors, 'Unable to create auth token.');
+          throw errors.message;
         }
 
-        return true;
+        return data.authToken;
       },
     },
     {
-      schema:
-        'changePasswordWithToken(token: String!, password: String!): User',
-      resolver: async (obj, { token, password }, context) => {
-        const now = Date.now();
+      schema: 'invalidateToken(token: String!): AuthToken',
+      resolver: async (obj, { token }, context) => {
+        const now = new Date().toISOString();
 
         const { errors, data } = await context.executeGraphQL({
           context: context.createContext({ skipAccessControl: true }),
           query: `
             query findUserFromToken($token: String!, $now: DateTime!) {
-              passwordTokens: allForgottenPasswordTokens(where: { token: $token, expiresAt_gte: $now }) {
+              authTokens: allAuthTokens(where: { token: $token, expiresAt_gte: $now }) {
                 id
                 token
+                invalid
+                expiresAt
                 user {
                   id
                 }
@@ -229,33 +235,24 @@ exports.customSchema = {
           variables: { token, now },
         });
 
-        if (errors || !data.passwordTokens || !data.passwordTokens.length) {
-          console.error(errors, 'Unable to find token');
+        if (errors) {
+          console.error(errors, 'Unable to find user with the given token');
           throw errors.message;
         }
 
-        const user = data.passwordTokens[0].user.id;
-        const tokenId = data.passwordTokens[0].id;
-
-        const { errors: passwordError } = await context.executeGraphQL({
-          context: context.createContext({ skipAccessControl: true }),
-          query: `mutation UpdateUserPassword($user: ID!, $password: String!) {
-            updateUser(id: $user, data: { password: $password }) {
-              id
-            }
-          }`,
-          variables: { user, password },
-        });
-
-        if (passwordError) {
-          console.error(passwordError, 'Unable to change password');
-          throw passwordError.message;
+        if (!data.authTokens.length) {
+          const msg =
+            'No users found for the given token. Probably it has expired';
+          console.error(errors, msg);
+          throw msg;
         }
 
-        await context.executeGraphQL({
+        const tokenId = data.authTokens[0].id;
+
+        const { errors: err, updatedItem } = await context.executeGraphQL({
           context: context.createContext({ skipAccessControl: true }),
-          query: `mutation DeletePasswordToken($tokenId: ID!) {
-            deleteForgottenPasswordToken(id: $tokenId) {
+          query: `mutation updateAuthToken($tokenId: ID!): AuthToken {
+            updatedItem: updateAuthToken(id: $tokenId, data: { invalid: true }) {
               id
             }
           }
@@ -263,7 +260,12 @@ exports.customSchema = {
           variables: { tokenId },
         });
 
-        return true;
+        if (err) {
+          console.error(err, 'Unable to invalidate auth token');
+          throw errors.message;
+        }
+
+        return updatedItem;
       },
     },
   ],

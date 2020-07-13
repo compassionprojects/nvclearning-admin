@@ -6,7 +6,7 @@ const { AdminUIApp } = require('@keystonejs/app-admin-ui');
 const { KnexAdapter: Adapter } = require('@keystonejs/adapter-knex');
 const { PasswordAuthStrategy } = require('@keystonejs/auth-password');
 const session = require('express-session');
-const { User } = require('./schema');
+const { User, AuthToken, customSchema } = require('./schema');
 
 const PROJECT_NAME = 'vic';
 const knexOptions = require('./knexfile');
@@ -35,6 +35,9 @@ const keystone = new Keystone({
 
 // create our app entities / data structure
 keystone.createList('User', User);
+keystone.createList('AuthToken', AuthToken);
+
+keystone.extendGraphQLSchema(customSchema);
 
 const authStrategy = keystone.createAuthStrategy({
   type: PasswordAuthStrategy,

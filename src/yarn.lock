@@ -2056,7 +2056,7 @@
     slate-react "^0.22.4"
     unsplash-js "^6.0.0"
 
-"@keystonejs/keystone@^11.0.0":
+"@keystonejs/keystone@11.2.0", "@keystonejs/keystone@^11.0.0":
   version "11.2.0"
   resolved "https://registry.yarnpkg.com/@keystonejs/keystone/-/keystone-11.2.0.tgz#263c7298a7b5350eef7defad348fdb21002b40dd"
   integrity sha512-D81lJYPCToxdc+YFFAxnHpc3ygnSN5QgeESpq3O35vch4zRSGYDD4KXmU/GiBFOO6bm/sx+ORZ0rxnHbLM5JfQ==
