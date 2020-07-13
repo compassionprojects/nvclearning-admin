@@ -1,4 +1,4 @@
-// const React = require('react');
+const React = require('react'); // eslint-disable-line
 
 module.exports = ({ recipientEmail, signInUrl }) => (
   <html>
@@ -7,8 +7,7 @@ module.exports = ({ recipientEmail, signInUrl }) => (
         <p>Hi {recipientEmail}</p>
         <div>
           <p>
-            We have received your request to reset your password. Please follow
-            the link below to reset your password.
+            We have received your request to send you the magic sign-in link.
           </p>
           <ul>
             <li>
@@ -18,8 +17,8 @@ module.exports = ({ recipientEmail, signInUrl }) => (
             </li>
           </ul>
           <p>
-            If you didn’t ask for your password to be reset, you can safely
-            ignore this email.
+            If you didn’t ask for your magic sign-in link, please ignore this
+            email.
           </p>
         </div>
       </div>
