@@ -175,7 +175,7 @@ exports.customSchema = {
         };
 
         const { errors, data } = await context.executeGraphQL({
-          context,
+          context: context.createContext({ skipAccessControl: true }),
           query: `
             mutation createAuthToken(
               $userId: ID!,
