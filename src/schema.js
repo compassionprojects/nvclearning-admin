@@ -5,7 +5,9 @@ const {
   Checkbox,
   Password,
   Uuid,
+  Virtual,
 } = require('@keystonejs/fields');
+const moment = require('moment');
 const { atTracking /* byTracking */ } = require('@keystonejs/list-plugins');
 const { v4: uuid } = require('uuid');
 const { signin } = require('./emails');
@@ -76,6 +78,13 @@ exports.AuthToken = {
       access: { read: userIsAdmin, update: false },
     },
     invalid: { type: Checkbox, defaultValue: false },
+    expired: {
+      type: Virtual,
+      resolver: (item) => {
+        const now = new Date();
+        return moment(item.expiresAt).isSameOrBefore(now);
+      },
+    },
   },
   plugins,
   hooks: {
@@ -238,7 +247,7 @@ exports.customSchema = {
           const msg =
             'No users found for the given token. Probably it has expired';
           console.error(errors, msg);
-          throw msg;
+          throw new Error(msg);
         }
 
         const tokenId = data.authTokens[0].id;
