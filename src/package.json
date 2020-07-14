@@ -31,8 +31,7 @@
     "cross-env": "^7.0.0",
     "express-session": "^1.17.1",
     "knex": "^0.21.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "postmark": "^2.5.4",
     "uuid": "^8.2.0"
   },
   "devDependencies": {

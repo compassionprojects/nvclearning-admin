@@ -1,17 +1,24 @@
-const { emailSender } = require('@keystonejs/email');
+const postmark = require('postmark');
+const signin = require('./sign-in');
 
-const jsxEmailSender = emailSender.jsx({
-  root: __dirname,
-  transport: 'mandrill',
-});
+const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
 
-const sendEmail = (templatePath, rendererProps, options) => {
-  if (!templatePath) {
-    console.error('No template path provided');
-  }
-  return jsxEmailSender(templatePath).send(rendererProps, options);
-};
+function send({ to, subject, body }) {
+  client.sendEmail({
+    From: process.env.POSTMARK_FROM,
+    To: to,
+    Subject: subject,
+    HtmlBody: body,
+  });
+}
 
 module.exports = {
-  sendEmail,
+  signin: function ({ to, subject, ...props }) {
+    const body = signin({ to, ...props });
+    send({
+      to,
+      subject,
+      body,
+    });
+  },
 };

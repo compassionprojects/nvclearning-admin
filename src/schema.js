@@ -8,7 +8,7 @@ const {
 } = require('@keystonejs/fields');
 const { atTracking /* byTracking */ } = require('@keystonejs/list-plugins');
 const { v4: uuid } = require('uuid');
-const { sendEmail } = require('./emails');
+const { signin } = require('./emails');
 
 // const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce');
 // const { graphql } = require('graphql');
@@ -90,6 +90,7 @@ exports.AuthToken = {
         query GetUserAndToken($user: ID!, $now: DateTime!) {
           user: User( where: { id: $user }) {
             id
+            name
             email
           }
           allAuthTokens( where: { user: { id: $user }, expiresAt_gte: $now, invalid: false }) {
@@ -108,21 +109,14 @@ exports.AuthToken = {
 
       const { allAuthTokens, user } = data;
       const authToken = allAuthTokens[0].token;
-      const url = process.env.SERVER_URL || 'http://localhost:3000';
+      const url = process.env.SERVER_URL || 'http://localhost:4000';
 
-      const props = {
-        signInUrl: `${url}/signin?token=${authToken}`,
-        recipientEmail: user.email,
-      };
-
-      const options = {
-        subject: 'Request for sign-in',
+      signin({
         to: user.email,
-        from: process.env.MANDRILL_FROM,
-        apiKey: process.env.MANDRILL_API_KEY,
-      };
-
-      await sendEmail('sign-in.jsx', props, options);
+        subject: 'Sign in to VIC Peacefactory',
+        name: user.name,
+        magicLink: `${url}/signin?token=${authToken}`,
+      });
     },
   },
 };
