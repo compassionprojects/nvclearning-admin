@@ -124,7 +124,7 @@ exports.AuthToken = {
         to: user.email,
         subject: 'Sign in to VIC Peacefactory',
         name: user.name,
-        magicLink: `${url}/signin?token=${authToken}`,
+        magicLink: `${url}/auth?token=${authToken}`,
       });
     },
   },
