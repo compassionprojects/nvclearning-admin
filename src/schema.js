@@ -77,7 +77,7 @@ exports.AuthToken = {
       isRequired: true,
       access: { read: userIsAdmin, update: false },
     },
-    invalid: { type: Checkbox, defaultValue: false },
+    valid: { type: Checkbox, defaultValue: false },
     expired: {
       type: Virtual,
       resolver: (item) => {
@@ -102,7 +102,7 @@ exports.AuthToken = {
             name
             email
           }
-          allAuthTokens( where: { user: { id: $user }, expiresAt_gte: $now, invalid: false }) {
+          allAuthTokens( where: { user: { id: $user }, expiresAt_gte: $now, valid: false }, sortBy:expiresAt_DESC) {
             token
             expiresAt
           }
@@ -189,7 +189,7 @@ exports.customSchema = {
               }) {
                 id
                 token
-                invalid
+                valid
                 user {
                   id
                   name
@@ -217,7 +217,7 @@ exports.customSchema = {
       },
     },
     {
-      schema: 'invalidateToken(token: String!): AuthToken',
+      schema: 'validateToken(token: String!): AuthToken',
       resolver: async (obj, { token }, context) => {
         const now = new Date().toISOString();
 
@@ -225,16 +225,18 @@ exports.customSchema = {
           context: context.createContext({ skipAccessControl: true }),
           query: `
             query findUserFromToken($token: String!, $now: DateTime!) {
-              authTokens: allAuthTokens(where: { token: $token, expiresAt_gte: $now }) {
+              authTokens: allAuthTokens(
+                where: { token: $token, expiresAt_gte: $now }
+              ) {
+              id
+              token
+              valid
+              expiresAt
+              user {
                 id
-                token
-                invalid
-                expiresAt
-                user {
-                  id
-                }
               }
-            }`,
+            }
+          }`,
           variables: { token, now },
         });
 
@@ -254,17 +256,16 @@ exports.customSchema = {
 
         const { errors: err, updatedItem } = await context.executeGraphQL({
           context: context.createContext({ skipAccessControl: true }),
-          query: `mutation updateAuthToken($tokenId: ID!): AuthToken {
-            updatedItem: updateAuthToken(id: $tokenId, data: { invalid: true }) {
+          query: `mutation updateAuthToken($tokenId: ID!) {
+            updatedItem: updateAuthToken(id: $tokenId, data: { valid: true }) {
               id
             }
-          }
-        `,
+          }`,
           variables: { tokenId },
         });
 
         if (err) {
-          console.error(err, 'Unable to invalidate auth token');
+          console.error(err, 'Unable to validate auth token');
           throw errors.message;
         }
 

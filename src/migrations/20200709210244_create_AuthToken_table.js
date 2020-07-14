@@ -18,7 +18,7 @@ exports.up = function (knex) {
       table.timestamp('expiresAt_utc', utc);
       table.text('expiresAt_offset');
 
-      table.boolean('invalid');
+      table.boolean('valid');
 
       table.index('user');
     });
