@@ -6,7 +6,7 @@ module.exports = ({ name, magicLink }) => `
         <p>Hi ${name},</p>
         <div>
           <p>
-            Here's your <a href=${magicLink} target="_blank">magic link</a> to sign in to the VIC platform.
+            Here's your <a href="${magicLink}" target="_blank">magic link</a> to sign in to the VIC platform.
           </p>
           <p>
             If you are having any trouble signing in or if you have any questions, you may respond to this email and we will help you out.

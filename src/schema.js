@@ -241,8 +241,9 @@ exports.customSchema = {
         });
 
         if (errors) {
-          console.error(errors, 'Unable to find user with the given token');
-          throw errors.message;
+          const msg = 'Unable to find user with the given token';
+          console.error(errors, msg);
+          throw new Error(msg);
         }
 
         if (!data.authTokens.length) {
