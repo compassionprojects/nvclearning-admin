@@ -19,9 +19,9 @@ const { signin } = require('./emails');
  * Access control
  */
 
-const userIsAdmin = ({ authentication: { item: user } }) =>
-  Boolean(user && user.isAdmin);
-const userIsAuthenticated = ({ authentication: { item } }) => !!item;
+// const userIsAdmin = ({ authentication: { item: user } }) =>
+//   Boolean(user && user.isAdmin);
+// const userIsAuthenticated = ({ authentication: { item } }) => !!item;
 
 const dateFormat = { format: 'dd/MM/yyyy h:mm a' };
 const plugins = [atTracking(dateFormat)];
@@ -31,19 +31,17 @@ const plugins = [atTracking(dateFormat)];
  */
 
 exports.User = {
-  access: {
-    create: userIsAdmin,
-    read: userIsAuthenticated,
-    update: userIsAdmin,
-    delete: userIsAdmin,
-  },
+  // access: {
+  //   create: userIsAdmin,
+  //   update: userIsAdmin,
+  //   delete: userIsAdmin,
+  // },
   fields: {
     name: { type: Text },
     email: {
       type: Text,
       isUnique: true,
       isRequired: true,
-      access: { read: userIsAuthenticated },
     },
     isAdmin: { type: Checkbox },
     password: {
@@ -54,32 +52,31 @@ exports.User = {
 };
 
 exports.AuthToken = {
-  access: {
-    create: true,
-    read: true,
-    update: userIsAdmin,
-    delete: userIsAdmin,
-  },
+  // access: {
+  //   update: userIsAdmin,
+  //   delete: userIsAdmin,
+  // },
   fields: {
     user: {
       type: Relationship,
       ref: 'User',
-      // access: { read: userIsAdmin },
+      access: { update: false },
     },
     token: {
       type: Uuid,
       isRequired: true,
       isUnique: true,
-      access: { read: userIsAdmin, update: false },
+      access: { update: false },
     },
     expiresAt: {
       type: DateTime,
       isRequired: true,
-      access: { read: userIsAdmin, update: false },
+      access: { update: false },
     },
     valid: { type: Checkbox, defaultValue: false },
     expired: {
       type: Virtual,
+      graphQLReturnType: 'Boolean',
       resolver: (item) => {
         const now = new Date();
         return moment(item.expiresAt).isSameOrBefore(now);
@@ -241,7 +238,8 @@ exports.customSchema = {
         });
 
         if (errors) {
-          const msg = 'Unable to find user with the given token';
+          const msg =
+            'Unable to find user with the given token OR the token has expired';
           console.error(errors, msg);
           throw new Error(msg);
         }
@@ -260,6 +258,8 @@ exports.customSchema = {
           query: `mutation updateAuthToken($tokenId: ID!) {
             updatedItem: updateAuthToken(id: $tokenId, data: { valid: true }) {
               id
+              expiresAt
+              token
             }
           }`,
           variables: { tokenId },
