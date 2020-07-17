@@ -171,6 +171,7 @@ exports.customSchema = {
           expiresAt,
         };
 
+        // @todo don't create a new one if there is one that already exists
         const { errors, data } = await context.executeGraphQL({
           context: context.createContext({ skipAccessControl: true }),
           query: `
