@@ -1,4 +1,6 @@
 const {
+  Select,
+  Url,
   Text,
   Relationship,
   DateTime,
@@ -8,19 +10,23 @@ const {
   Virtual,
 } = require('@keystonejs/fields');
 const moment = require('moment');
-const { atTracking /* byTracking */ } = require('@keystonejs/list-plugins');
+const {
+  atTracking,
+  byTracking,
+  singleton,
+} = require('@keystonejs/list-plugins');
 const { v4: uuid } = require('uuid');
 const { signin } = require('./emails');
 
-// const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce');
+const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce');
 // const { graphql } = require('graphql');
 
 /**
  * Access control
  */
 
-// const userIsAdmin = ({ authentication: { item: user } }) =>
-//   Boolean(user && user.isAdmin);
+const userIsAdmin = ({ authentication: { item: user } }) =>
+  Boolean(user && user.isAdmin);
 // const userIsAuthenticated = ({ authentication: { item } }) => !!item;
 
 const dateFormat = { format: 'dd/MM/yyyy h:mm a' };
@@ -31,11 +37,12 @@ const plugins = [atTracking(dateFormat)];
  */
 
 exports.User = {
-  // access: {
-  //   create: userIsAdmin,
-  //   update: userIsAdmin,
-  //   delete: userIsAdmin,
-  // },
+  access: {
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+    auth: true,
+  },
   fields: {
     name: { type: Text },
     email: {
@@ -49,6 +56,67 @@ exports.User = {
     },
   },
   plugins,
+};
+
+exports.Space = {
+  access: {
+    read: true,
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
+  fields: {
+    title: { type: Text, isRequired: true },
+  },
+  labelResolver: (item) => item.title,
+  plugins: plugins.concat(byTracking()),
+};
+
+exports.LibrarySection = {
+  access: {
+    read: true,
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
+  fields: {
+    title: { type: Text, isRequired: true },
+  },
+  labelResolver: (item) => item.title,
+  plugins: plugins.concat(byTracking()),
+};
+
+exports.Content = {
+  access: {
+    read: true,
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
+  fields: {
+    title: { type: Text, isRequired: true },
+    description: { type: Wysiwyg, isRequired: true },
+    url: { type: Url },
+    contentType: { type: Select, options: 'image, video' },
+    librarySection: { type: Relationship, ref: 'LibrarySection' },
+    space: { type: Relationship, ref: 'Space' },
+    callToActionTitle: { type: Text },
+    callToActionUrl: { type: Url },
+  },
+  plugins: plugins.concat(byTracking()),
+};
+
+exports.Schedule = {
+  access: {
+    read: true,
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
+  fields: {
+    description: { type: Wysiwyg, isRequired: true },
+  },
+  plugins: plugins.concat([byTracking(), singleton()]),
 };
 
 exports.AuthToken = {
