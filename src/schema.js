@@ -104,6 +104,10 @@ exports.Content = {
     callToActionUrl: { type: Url },
   },
   plugins: plugins.concat(byTracking()),
+  adminConfig: {
+    defaultColumns: 'title, contentType, librarySection, space, updatedAt',
+    defaultSort: 'createdAt',
+  },
 };
 
 exports.Schedule = {
