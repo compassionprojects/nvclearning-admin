@@ -97,7 +97,7 @@ exports.Content = {
     title: { type: Text, isRequired: true },
     description: { type: Wysiwyg, isRequired: true },
     url: { type: Url },
-    contentType: { type: Select, options: 'image, video' },
+    contentType: { type: Select, options: 'image, video, document' },
     librarySection: { type: Relationship, ref: 'LibrarySection' },
     space: { type: Relationship, ref: 'Space' },
     callToActionTitle: { type: Text },
