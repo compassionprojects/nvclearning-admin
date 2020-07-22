@@ -14,6 +14,7 @@ const {
   LibrarySection,
   Content,
   Schedule,
+  Card,
 } = require('./schema');
 
 const PROJECT_NAME = 'vic';
@@ -48,6 +49,7 @@ keystone.createList('Space', Space);
 keystone.createList('LibrarySection', LibrarySection);
 keystone.createList('Content', Content);
 keystone.createList('Schedule', Schedule);
+keystone.createList('Card', Card);
 
 keystone.extendGraphQLSchema(customSchema);
 

@@ -123,6 +123,24 @@ exports.Schedule = {
   plugins: plugins.concat([byTracking(), singleton()]),
 };
 
+exports.Card = {
+  access: {
+    read: true,
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
+  fields: {
+    text: { type: Text, isRequired: true, isMultiline: true },
+    type: {
+      type: Select,
+      options: 'feelings, needs, challenge',
+      isRequired: true,
+    },
+  },
+  plugins: plugins.concat(byTracking()),
+};
+
 exports.AuthToken = {
   // access: {
   //   update: userIsAdmin,
