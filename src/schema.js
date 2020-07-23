@@ -1,5 +1,6 @@
 const {
   Select,
+  Integer,
   Url,
   Text,
   Relationship,
@@ -67,6 +68,7 @@ exports.Space = {
   },
   fields: {
     title: { type: Text, isRequired: true },
+    position: { type: Integer },
   },
   labelResolver: (item) => item.title,
   plugins: plugins.concat(byTracking()),
