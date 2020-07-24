@@ -28,7 +28,7 @@ const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce');
 
 const userIsAdmin = ({ authentication: { item: user } }) =>
   Boolean(user && user.isAdmin);
-// const userIsAuthenticated = ({ authentication: { item } }) => !!item;
+const userIsAuthenticated = ({ authentication: { item } }) => !!item;
 
 const dateFormat = { format: 'dd/MM/yyyy h:mm a' };
 const plugins = [atTracking(dateFormat)];
@@ -39,6 +39,7 @@ const plugins = [atTracking(dateFormat)];
 
 exports.User = {
   access: {
+    // @todo add read - userIsAuthenticated or self
     create: userIsAdmin,
     update: userIsAdmin,
     delete: userIsAdmin,
@@ -139,6 +140,39 @@ exports.Card = {
       options: 'feelings, needs, challenge',
       isRequired: true,
     },
+  },
+  plugins: plugins.concat(byTracking()),
+};
+
+exports.Message = {
+  // @todo make sure the user is self
+  access: {
+    read: true,
+    create: userIsAuthenticated,
+    update: userIsAuthenticated,
+    delete: userIsAuthenticated,
+  },
+  fields: {
+    body: { type: Text, isRequired: true, isMultiline: true },
+    type: {
+      type: Relationship,
+      ref: 'MessageType',
+      isRequired: true,
+    },
+    replies: { type: Relationship, ref: 'Message', many: true },
+  },
+  plugins: plugins.concat(byTracking()),
+};
+
+exports.MessageType = {
+  access: {
+    read: true,
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
+  fields: {
+    title: { type: Text, isRequired: true },
   },
   plugins: plugins.concat(byTracking()),
 };
