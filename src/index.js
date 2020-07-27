@@ -13,6 +13,8 @@ const {
   Content,
   Schedule,
   Card,
+  Message,
+  MessageType,
 } = require('./schema');
 
 const PROJECT_NAME = 'vic';
@@ -43,6 +45,8 @@ keystone.createList('LibrarySection', LibrarySection);
 keystone.createList('Content', Content);
 keystone.createList('Schedule', Schedule);
 keystone.createList('Card', Card);
+keystone.createList('Message', Message);
+keystone.createList('MessageType', MessageType);
 
 const authStrategy = keystone.createAuthStrategy({
   type: PasswordAuthStrategy,
