@@ -59,7 +59,9 @@ module.exports = {
   keystone,
   apps: [
     new VICApp(),
-    new GraphQLApp({ apollo: { cors } }),
+    new GraphQLApp({
+      apollo: { introspection: true, playground: true, cors: false },
+    }),
     new AdminUIApp({
       enableDefaultRoute: false,
       authStrategy,
