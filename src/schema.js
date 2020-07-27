@@ -156,6 +156,7 @@ exports.Message = {
     },
     replies: { type: Relationship, ref: 'Message', many: true },
   },
+  labelResolver: (item) => `Message ${item.id}`,
   plugins: plugins.concat(byTracking()),
 };
 
@@ -169,5 +170,6 @@ exports.MessageType = {
   fields: {
     title: { type: Text, isRequired: true },
   },
+  labelResolver: (item) => item.title,
   plugins: plugins.concat(byTracking()),
 };
