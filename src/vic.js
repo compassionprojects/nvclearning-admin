@@ -27,7 +27,6 @@ module.exports = class VICApp {
     );
 
     app.use(passport.initialize());
-    app.use(passport.session());
 
     passport.serializeUser((user, done) => done(null, user));
     passport.deserializeUser((user, done) => done(null, user));
@@ -77,16 +76,12 @@ module.exports = class VICApp {
 
     app.get(
       '/auth/magiclink/callback',
-      passport.authenticate('magiclink', { action: 'acceptToken' }),
+      passport.authenticate('magiclink', {
+        action: 'acceptToken',
+        allowReuse: true,
+      }),
       (req, res) => res.json({ ok: true })
     );
-
-    app.get('/authorized', (req, res) => {
-      res.json({
-        user: req.user,
-        query: req.query,
-      });
-    });
 
     return app;
   }

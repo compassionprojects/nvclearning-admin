@@ -8,8 +8,6 @@ const { KnexAdapter: Adapter } = require('@keystonejs/adapter-knex');
 const { PasswordAuthStrategy } = require('@keystonejs/auth-password');
 const {
   User,
-  AuthToken,
-  customSchema,
   Space,
   LibrarySection,
   Content,
@@ -40,13 +38,11 @@ const keystone = new Keystone({
 
 // create our app entities
 keystone.createList('User', User);
-keystone.createList('AuthToken', AuthToken);
 keystone.createList('Space', Space);
 keystone.createList('LibrarySection', LibrarySection);
 keystone.createList('Content', Content);
 keystone.createList('Schedule', Schedule);
 keystone.createList('Card', Card);
-keystone.extendGraphQLSchema(customSchema);
 
 const authStrategy = keystone.createAuthStrategy({
   type: PasswordAuthStrategy,
@@ -56,8 +52,8 @@ const authStrategy = keystone.createAuthStrategy({
 module.exports = {
   keystone,
   apps: [
-    new VICApp(keystone),
     new GraphQLApp(),
+    new VICApp(keystone),
     new AdminUIApp({
       enableDefaultRoute: false,
       authStrategy,
