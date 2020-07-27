@@ -53,11 +53,13 @@ const authStrategy = keystone.createAuthStrategy({
   list: 'User',
 });
 
+const cors = { origin: process.env.SERVER_URL, credentials: true };
+
 module.exports = {
   keystone,
   apps: [
     new VICApp(),
-    new GraphQLApp(),
+    new GraphQLApp({ apollo: { cors } }),
     new AdminUIApp({
       enableDefaultRoute: false,
       authStrategy,
@@ -65,7 +67,7 @@ module.exports = {
         !!user && !!user.isAdmin,
     }),
   ],
-  cors: { origin: process.env.SERVER_URL, credentials: true },
+  cors,
   configureExpress: (app) => {
     app.set('trust proxy', 1);
   },
