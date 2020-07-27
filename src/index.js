@@ -1,34 +1,30 @@
 require('dotenv').config();
 
+const session = require('express-session');
 const { Keystone } = require('@keystonejs/keystone');
 const { GraphQLApp } = require('@keystonejs/app-graphql');
 const { AdminUIApp } = require('@keystonejs/app-admin-ui');
 const { KnexAdapter: Adapter } = require('@keystonejs/adapter-knex');
 const { PasswordAuthStrategy } = require('@keystonejs/auth-password');
-const session = require('express-session');
 const {
   User,
-  AuthToken,
-  customSchema,
   Space,
   LibrarySection,
   Content,
   Schedule,
   Card,
+  Message,
+  MessageType,
 } = require('./schema');
 
 const PROJECT_NAME = 'vic';
+const VICApp = require('./vic');
 const knexOptions = require('./knexfile');
 const adapterConfig = { knexOptions };
 const KnexSessionStore = require('connect-session-knex')(session);
 const isProduction = process.env.NODE_ENV === 'production';
 
-/**
- * You've got a new KeystoneJS Project! Things you might want to do next:
- * - Add adapter config options (See: https://keystonejs.com/keystonejs/adapter-mongoose/)
- * - Select configure access control and authentication (See: https://keystonejs.com/api/access-control)
- */
-
+// Init keystone
 const keystone = new Keystone({
   name: PROJECT_NAME,
   cookieSecret: process.env.COOKIE_SECRET,
@@ -42,16 +38,15 @@ const keystone = new Keystone({
   }),
 });
 
-// create our app entities / data structure
+// create our app entities
 keystone.createList('User', User);
-keystone.createList('AuthToken', AuthToken);
 keystone.createList('Space', Space);
 keystone.createList('LibrarySection', LibrarySection);
 keystone.createList('Content', Content);
 keystone.createList('Schedule', Schedule);
 keystone.createList('Card', Card);
-
-keystone.extendGraphQLSchema(customSchema);
+keystone.createList('Message', Message);
+keystone.createList('MessageType', MessageType);
 
 const authStrategy = keystone.createAuthStrategy({
   type: PasswordAuthStrategy,
@@ -61,6 +56,7 @@ const authStrategy = keystone.createAuthStrategy({
 module.exports = {
   keystone,
   apps: [
+    new VICApp(),
     new GraphQLApp(),
     new AdminUIApp({
       enableDefaultRoute: false,
