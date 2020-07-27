@@ -1,5 +1,6 @@
 const express = require('express');
 const passport = require('passport');
+const cors = require('cors');
 const MagicLinkStrategy = require('passport-magic-link').Strategy;
 
 const { signin } = require('./emails');
@@ -22,6 +23,12 @@ module.exports = class VICApp {
       )
     );
 
+    app.use(
+      cors({
+        origin: process.env.SERVER_URL,
+        credentials: true,
+      })
+    );
     app.use(passport.initialize());
 
     passport.serializeUser((user, done) => done(null, user));
