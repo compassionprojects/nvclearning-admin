@@ -52,8 +52,8 @@ const authStrategy = keystone.createAuthStrategy({
 module.exports = {
   keystone,
   apps: [
+    new VICApp(),
     new GraphQLApp(),
-    new VICApp(keystone),
     new AdminUIApp({
       enableDefaultRoute: false,
       authStrategy,

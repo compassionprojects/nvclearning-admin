@@ -6,10 +6,6 @@ const { signin } = require('./emails');
 const { gql } = require('apollo-server-express');
 
 module.exports = class VICApp {
-  constructor(keystone) {
-    this.keystone = keystone;
-  }
-
   prepareMiddleware({ keystone }) {
     const app = express();
 
@@ -41,23 +37,26 @@ module.exports = class VICApp {
 
     app.use(async (req, res, next) => {
       if (!req.user) return next();
+      if (req.user && req.user.isAdmin) return next();
+
+      const query = gql`
+        query User($id: ID!) {
+          User(where: { id: $id }) {
+            id
+            email
+            name
+          }
+        }
+      `;
 
       const context = keystone.createContext({ skipAccessControl: true });
       const { data, errors } = await keystone.executeGraphQL({
         context,
-        query: gql`
-          query User($id: ID!) {
-            User(where: { id: $id }) {
-              id
-              email
-              name
-            }
-          }
-        `,
+        query,
         variables: { id: req.user.id },
       });
 
-      if (errors) return next(errors);
+      if (errors) return next(errors.message);
 
       // returns a token
       await keystone._sessionManager.startAuthedSession(req, {
