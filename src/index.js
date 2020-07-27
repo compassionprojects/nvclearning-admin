@@ -22,14 +22,14 @@ const VICApp = require('./vic');
 const knexOptions = require('./knexfile');
 const adapterConfig = { knexOptions };
 const KnexSessionStore = require('connect-session-knex')(session);
-// const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'production';
 
 // Init keystone
 const keystone = new Keystone({
   name: PROJECT_NAME,
   cookieSecret: process.env.COOKIE_SECRET,
   cookie: {
-    secure: false,
+    secure: isProduction,
   },
   adapter: new Adapter(adapterConfig),
   sessionStore: new KnexSessionStore({
@@ -57,11 +57,10 @@ const cors = { origin: process.env.SERVER_URL, credentials: true };
 
 module.exports = {
   keystone,
+  cors,
   apps: [
     new VICApp(),
-    new GraphQLApp({
-      apollo: { introspection: true, playground: true, cors: false },
-    }),
+    new GraphQLApp({ apollo: { cors } }),
     new AdminUIApp({
       enableDefaultRoute: false,
       authStrategy,
@@ -69,8 +68,5 @@ module.exports = {
         !!user && !!user.isAdmin,
     }),
   ],
-  cors,
-  configureExpress: (app) => {
-    app.set('trust proxy', 1);
-  },
+  configureExpress: (app) => app.set('trust proxy', 1),
 };
