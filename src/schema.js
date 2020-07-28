@@ -93,7 +93,13 @@ exports.Content = {
   },
   fields: {
     title: { type: Text, isRequired: true },
-    description: { type: Wysiwyg, isRequired: true },
+    description: {
+      type: Wysiwyg,
+      isRequired: true,
+      editorConfig: {
+        block_formats: 'Paragraph=p;',
+      },
+    },
     url: { type: Url },
     contentType: { type: Select, options: 'image, video, document' },
     librarySection: { type: Relationship, ref: 'LibrarySection' },
@@ -116,7 +122,13 @@ exports.Schedule = {
     delete: userIsAdmin,
   },
   fields: {
-    description: { type: Wysiwyg, isRequired: true },
+    description: {
+      type: Wysiwyg,
+      isRequired: true,
+      editorConfig: {
+        block_formats: 'Paragraph=p;',
+      },
+    },
   },
   plugins: plugins.concat([byTracking(), singleton()]),
 };
