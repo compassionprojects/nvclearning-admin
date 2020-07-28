@@ -167,6 +167,7 @@ exports.Message = {
       isRequired: true,
     },
     replies: { type: Relationship, ref: 'Message', many: true },
+    parent: { type: Relationship, ref: 'Message' },
   },
   labelResolver: (item) => `Message ${item.id}`,
   plugins: plugins.concat(byTracking()),
