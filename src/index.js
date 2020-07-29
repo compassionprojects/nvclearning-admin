@@ -53,7 +53,13 @@ const authStrategy = keystone.createAuthStrategy({
   list: 'User',
 });
 
-const cors = { origin: process.env.SERVER_URL, credentials: true };
+const cors = {
+  origin: [
+    process.env.SERVER_URL,
+    process.env.SERVER_URL.replace('https', 'http'),
+  ],
+  credentials: true,
+};
 
 module.exports = {
   keystone,

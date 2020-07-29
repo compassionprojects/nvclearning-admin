@@ -25,7 +25,10 @@ module.exports = class VICApp {
 
     app.use(
       cors({
-        origin: process.env.SERVER_URL,
+        origin: [
+          process.env.SERVER_URL,
+          process.env.SERVER_URL.replace('https', 'http'),
+        ],
         credentials: true,
       })
     );
