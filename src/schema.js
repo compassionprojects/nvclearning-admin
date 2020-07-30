@@ -12,7 +12,7 @@ const {
   byTracking,
   singleton,
 } = require('@keystonejs/list-plugins');
-
+const { gql } = require('apollo-server-express');
 const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce');
 // const { graphql } = require('graphql');
 
@@ -168,9 +168,51 @@ exports.Message = {
     },
     replies: { type: Relationship, ref: 'Message', many: true },
     parent: { type: Relationship, ref: 'Message' },
+    orphaned: { type: Boolean },
   },
   labelResolver: (item) => `Message ${item.id}`,
   plugins: plugins.concat(byTracking()),
+  hooks: {
+    // Update replies and set them to orphaned
+    // Otherwise replies will show up on in the feed
+    async beforeDelete({ existingItem, context }) {
+      // Get all replies of the message that is going to be deleted
+      const { data, errors } = await context.executeGraphQL({
+        context: context.createContext({ skipAccessControl: true }),
+        query: gql`
+          query allReplies($id: ID!) {
+            allMessages(where: { parent: { id: $id } }) {
+              id
+            }
+          }
+        `,
+        variables: { id: existingItem.id },
+      });
+      if (errors) throw errors.message;
+      if (!data.allMessages.length) return;
+
+      // Set all the replies to orphaned so that it's not rendered
+      // in the client
+      const { errors: err } = await context.executeGraphQL({
+        context: context.createContext({ skipAccessControl: true }),
+        query: gql`
+          mutation setOrphaned($messages: [MessagesUpdateInput]) {
+            updateMessages(data: $messages) {
+              id
+            }
+          }
+        `,
+        variables: {
+          messages: data.allMessages.map((m) => ({
+            id: m.id,
+            data: { orphaned: true },
+          })),
+        },
+      });
+
+      if (err) throw errors.message;
+    },
+  },
 };
 
 exports.MessageType = {
