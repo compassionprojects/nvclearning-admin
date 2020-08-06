@@ -3,21 +3,21 @@ const React = require('react'); // eslint-disable-line
 module.exports = ({ name, magicLink }) => `
   <html>
     <body>
-        <p>Hi ${name},</p>
+        <p>Dear ${name},</p>
         <div>
           <p>
-            Here's your <a href="${magicLink}" target="_blank">magic link</a> to sign in to the VIC platform.
+            We are delighted to send you this <a href="${magicLink}" target="_blank">magic link</a> so that you can sign in to Peace Factory’s virtual exchange platform in preparation for the NVC course.
           </p>
           <p>
-            If you are having any trouble signing in or if you have any questions, you may respond to this email and we will help you out.
+            If you have trouble using this link or if you’re dissatisfied with our answers to the frequently asked questions which you’ll see on the platform, please do let us know by responding to this email and we will do our very best to support you.
           </p>
-          <p style="color: #aaa;">
-            If you didn’t ask for the magic sign in link, please ignore this
-            email.
-          </p>
-          Best,<br>
+          //<p style="color: #aaa;">
+          //  If you didn’t ask for the magic sign in link, please ignore this
+          //  email.
+          //</p>
+          Kind regards,<br>
           Louise<br>
-          <a href="http://peacefactory.fr" target="_blank">peacefactory.fr</a>
+          <a href="https://vic.peacefactory.fr" target="_blank">vic.peacefactory.fr</a>
         </div>
       </div>
     </body>
