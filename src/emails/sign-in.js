@@ -11,10 +11,6 @@ module.exports = ({ name, magicLink }) => `
           <p>
             If you have trouble using this link or if you’re dissatisfied with our answers to the frequently asked questions which you’ll see on the platform, please do let us know by responding to this email and we will do our very best to support you.
           </p>
-          //<p style="color: #aaa;">
-          //  If you didn’t ask for the magic sign in link, please ignore this
-          //  email.
-          //</p>
           Kind regards,<br>
           Louise<br>
           <a href="https://vic.peacefactory.fr" target="_blank">vic.peacefactory.fr</a>
