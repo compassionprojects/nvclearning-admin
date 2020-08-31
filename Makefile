@@ -3,6 +3,9 @@
 build:
 	docker-compose up -d --build
 
+install:
+	docker-compose exec api yarn install
+
 up:
 	docker-compose up -d
 

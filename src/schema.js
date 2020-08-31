@@ -22,7 +22,7 @@ const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce');
 
 const userIsAdmin = ({ authentication: { item: user } }) =>
   Boolean(user && user.isAdmin);
-const userIsAuthenticated = ({ authentication: { item } }) => !!item;
+const userIsAuthenticated = ({ authentication: { item } }) => Boolean(item);
 
 const dateFormat = { format: 'dd/MM/yyyy h:mm a' };
 const plugins = [atTracking(dateFormat)];
