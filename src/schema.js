@@ -6,6 +6,7 @@ const {
   Relationship,
   Checkbox,
   Password,
+  DateTime,
 } = require('@keystonejs/fields');
 const {
   atTracking,
@@ -51,6 +52,7 @@ exports.User = {
     password: {
       type: Password,
     },
+    courses: { type: Relationship, ref: 'Course', many: true },
   },
   plugins,
 };
@@ -102,6 +104,7 @@ exports.Content = {
     },
     url: { type: Url },
     contentType: { type: Select, options: 'image, video, document' },
+    course: { type: Relationship, ref: 'Course' },
     librarySection: { type: Relationship, ref: 'LibrarySection' },
     space: { type: Relationship, ref: 'Space' },
     callToActionTitle: { type: Text },
@@ -226,5 +229,102 @@ exports.MessageType = {
     title: { type: Text, isRequired: true },
   },
   labelResolver: (item) => item.title,
+  plugins: plugins.concat(byTracking()),
+};
+
+exports.Trainer = {
+  access: {
+    read: userIsAuthenticated,
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
+  fields: {
+    name: { type: Text, isRequired: true },
+    bio: { type: Wysiwyg, isRequired: true },
+    avatar_url: { type: Url },
+  },
+  labelResolver: (item) => item.name,
+  plugins: plugins.concat(byTracking()),
+};
+
+exports.Course = {
+  access: {
+    read: userIsAuthenticated,
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
+  fields: {
+    title: { type: Text, isRequired: true },
+    description: { type: Wysiwyg, isRequired: true },
+    about: { type: Wysiwyg, isRequired: true },
+    details: { type: Wysiwyg, isRequired: true },
+    facebookLink: { type: Url },
+    dateStart: { type: DateTime, isRequired: true },
+    dateEnd: { type: DateTime, isRequired: true },
+    trainers: {
+      type: Relationship,
+      ref: 'Trainer',
+      many: true,
+      isRequired: true,
+    },
+  },
+  labelResolver: (item) => item.title,
+  plugins: plugins.concat(byTracking()),
+};
+
+exports.Pricing = {
+  access: {
+    read: userIsAuthenticated,
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
+  fields: {
+    title: { type: Text, isRequired: true },
+    price: { type: Integer, isRequired: true },
+    course: { type: Relationship, ref: 'Course', isRequired: true },
+    currency: { type: Select, options: 'EUR', isRequired: true },
+    stripePriceId: { type: Text, isRequired: true },
+  },
+  labelResolver: (item) => item.title,
+  plugins: plugins.concat(byTracking()),
+};
+
+exports.Order = {
+  access: {
+    read: userIsAuthenticated,
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
+  fields: {
+    stripeSessionId: { type: Text, isRequired: true },
+    stripeCustomerEmail: { type: Text, isRequired: true },
+    stripeCustomerId: { type: Text, isRequired: true },
+    course: { type: Relationship, ref: 'Course', isRequired: true },
+  },
+  plugins: plugins.concat(byTracking()),
+};
+
+exports.FAQ = {
+  access: {
+    read: userIsAuthenticated,
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
+  fields: {
+    question: { type: Text, isRequired: true },
+    answer: { type: Wysiwyg, isRequired: true },
+    courses: {
+      type: Relationship,
+      ref: 'Course',
+      many: true,
+      isRequired: true,
+    },
+    weight: { type: Integer },
+  },
   plugins: plugins.concat(byTracking()),
 };
