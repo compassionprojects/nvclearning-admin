@@ -17,6 +17,7 @@ exports.up = function (knex) {
       table.string('stripeCustomerEmail', 256).notNullable();
       table.string('stripeCustomerId', 256).notNullable();
       table.integer('course').notNullable();
+      table.index('course');
     });
 };
 

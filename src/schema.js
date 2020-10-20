@@ -172,6 +172,7 @@ exports.Message = {
     replies: { type: Relationship, ref: 'Message', many: true },
     parent: { type: Relationship, ref: 'Message' },
     orphaned: { type: Boolean },
+    course: { type: Relationship, ref: 'Course', isRequired: true },
   },
   labelResolver: (item) => `Message ${item.id}`,
   plugins: plugins.concat(byTracking()),
@@ -234,7 +235,7 @@ exports.MessageType = {
 
 exports.Trainer = {
   access: {
-    read: userIsAuthenticated,
+    read: true,
     create: userIsAdmin,
     update: userIsAdmin,
     delete: userIsAdmin,
@@ -250,7 +251,7 @@ exports.Trainer = {
 
 exports.Course = {
   access: {
-    read: userIsAuthenticated,
+    read: true,
     create: userIsAdmin,
     update: userIsAdmin,
     delete: userIsAdmin,
@@ -276,7 +277,7 @@ exports.Course = {
 
 exports.Pricing = {
   access: {
-    read: userIsAuthenticated,
+    read: true,
     create: userIsAdmin,
     update: userIsAdmin,
     delete: userIsAdmin,
@@ -287,6 +288,7 @@ exports.Pricing = {
     course: { type: Relationship, ref: 'Course', isRequired: true },
     currency: { type: Select, options: 'EUR', isRequired: true },
     stripePriceId: { type: Text, isRequired: true },
+    peopleEquivalent: { type: Integer },
   },
   labelResolver: (item) => item.title,
   plugins: plugins.concat(byTracking()),
@@ -294,7 +296,7 @@ exports.Pricing = {
 
 exports.Order = {
   access: {
-    read: userIsAuthenticated,
+    read: true,
     create: userIsAdmin,
     update: userIsAdmin,
     delete: userIsAdmin,
@@ -310,7 +312,7 @@ exports.Order = {
 
 exports.FAQ = {
   access: {
-    read: userIsAuthenticated,
+    read: true,
     create: userIsAdmin,
     update: userIsAdmin,
     delete: userIsAdmin,

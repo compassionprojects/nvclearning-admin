@@ -16,6 +16,7 @@ exports.up = function (knex) {
       table.string('title', 200).notNullable();
       table.integer('price').notNullable();
       table.integer('course').notNullable();
+      table.index('course');
       table.string('currency', 50).notNullable();
       table.string('stripePriceId', 200).notNullable();
     });
