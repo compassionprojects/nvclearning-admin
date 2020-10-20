@@ -297,7 +297,7 @@ exports.Pricing = {
 exports.Order = {
   access: {
     read: true,
-    create: userIsAdmin,
+    create: true,
     update: userIsAdmin,
     delete: userIsAdmin,
   },

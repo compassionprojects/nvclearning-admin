@@ -18,6 +18,7 @@ exports.up = function (knex) {
       table.string('stripeCustomerId', 256).notNullable();
       table.integer('course').notNullable();
       table.index('course');
+      table.unique(['stripeCustomerEmail', 'stripeSessionId']);
     });
 };
 
