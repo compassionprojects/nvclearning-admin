@@ -8,11 +8,7 @@ const {
   Password,
   DateTime,
 } = require('@keystonejs/fields');
-const {
-  atTracking,
-  byTracking,
-  singleton,
-} = require('@keystonejs/list-plugins');
+const { atTracking, byTracking } = require('@keystonejs/list-plugins');
 const { gql } = require('apollo-server-express');
 const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce');
 // const { graphql } = require('graphql');
@@ -119,12 +115,13 @@ exports.Content = {
 
 exports.Schedule = {
   access: {
-    read: userIsAuthenticated,
+    read: true,
     create: userIsAdmin,
     update: userIsAdmin,
     delete: userIsAdmin,
   },
   fields: {
+    course: { type: Relationship, ref: 'Course', isRequired: true },
     description: {
       type: Wysiwyg,
       isRequired: true,
@@ -133,7 +130,7 @@ exports.Schedule = {
       },
     },
   },
-  plugins: plugins.concat([byTracking(), singleton()]),
+  plugins: plugins.concat(byTracking()),
 };
 
 exports.Card = {
