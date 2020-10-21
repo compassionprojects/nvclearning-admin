@@ -239,8 +239,8 @@ exports.Trainer = {
   },
   fields: {
     name: { type: Text, isRequired: true },
-    bio: { type: Wysiwyg, isRequired: true },
     avatar_url: { type: Url },
+    bio: { type: Wysiwyg, isRequired: true },
   },
   labelResolver: (item) => item.name,
   plugins: plugins.concat(byTracking()),
