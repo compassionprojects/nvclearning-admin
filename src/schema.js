@@ -100,7 +100,7 @@ exports.Content = {
     },
     url: { type: Url },
     contentType: { type: Select, options: 'image, video, document' },
-    course: { type: Relationship, ref: 'Course' },
+    courses: { type: Relationship, ref: 'Course', many: true },
     librarySection: { type: Relationship, ref: 'LibrarySection' },
     space: { type: Relationship, ref: 'Space' },
     callToActionTitle: { type: Text },
