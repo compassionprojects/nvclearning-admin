@@ -88,7 +88,7 @@ exports.LibrarySection = {
 
 exports.Content = {
   access: {
-    read: userIsAuthenticated,
+    read: true,
     create: userIsAdmin,
     update: userIsAdmin,
     delete: userIsAdmin,
