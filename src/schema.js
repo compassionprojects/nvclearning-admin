@@ -256,9 +256,6 @@ exports.Course = {
   fields: {
     title: { type: Text, isRequired: true },
     description: { type: Wysiwyg, isRequired: true },
-    about: { type: Wysiwyg, isRequired: true },
-    details: { type: Wysiwyg, isRequired: true },
-    facebookLink: { type: Url },
     dateStart: { type: DateTime, isRequired: true },
     dateEnd: { type: DateTime, isRequired: true },
     trainers: {
@@ -267,6 +264,9 @@ exports.Course = {
       many: true,
       isRequired: true,
     },
+    facebookLink: { type: Url },
+    about: { type: Wysiwyg, isRequired: true },
+    details: { type: Wysiwyg, isRequired: true },
   },
   labelResolver: (item) => item.title,
   plugins: plugins.concat(byTracking()),
@@ -316,7 +316,6 @@ exports.FAQ = {
   },
   fields: {
     question: { type: Text, isRequired: true },
-    answer: { type: Wysiwyg, isRequired: true },
     courses: {
       type: Relationship,
       ref: 'Course',
@@ -324,6 +323,7 @@ exports.FAQ = {
       isRequired: true,
     },
     weight: { type: Integer },
+    answer: { type: Wysiwyg, isRequired: true },
   },
   plugins: plugins.concat(byTracking()),
 };
