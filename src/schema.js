@@ -125,7 +125,6 @@ exports.Schedule = {
     course: { type: Relationship, ref: 'Course', isRequired: true },
     description: {
       type: Wysiwyg,
-      isRequired: true,
       editorConfig: {
         block_formats: 'Paragraph=p;',
       },
