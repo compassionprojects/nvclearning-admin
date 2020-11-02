@@ -255,7 +255,13 @@ exports.Course = {
   },
   fields: {
     title: { type: Text, isRequired: true },
-    description: { type: Wysiwyg, isRequired: true },
+    description: {
+      type: Wysiwyg,
+      isRequired: true,
+      editorConfig: {
+        valid_elements: 'span,p,strong,b',
+      },
+    },
     dateStart: { type: DateTime, isRequired: true },
     dateEnd: { type: DateTime, isRequired: true },
     trainers: {
