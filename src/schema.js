@@ -261,6 +261,7 @@ exports.Course = {
       isRequired: true,
       editorConfig: {
         valid_elements: 'span,p,strong,b',
+        toolbar: 'undo redo code',
       },
     },
     dateStart: { type: DateTime, isRequired: true },
