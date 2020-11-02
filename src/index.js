@@ -81,7 +81,7 @@ module.exports = {
       enableDefaultRoute: false,
       authStrategy,
       isAccessAllowed: ({ authentication: { item: user } }) =>
-        !!user && !!user.isAdmin,
+        !!user && !!user.isAdmin && !user.disabled,
     }),
   ],
   configureExpress: (app) => app.set('trust proxy', 1),

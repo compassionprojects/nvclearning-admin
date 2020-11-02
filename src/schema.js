@@ -44,6 +44,7 @@ exports.User = {
       isRequired: true,
       access: { read: userIsAuthenticated },
     },
+    disabled: { type: Checkbox },
     isAdmin: { type: Checkbox },
     password: {
       type: Password,
@@ -271,6 +272,7 @@ exports.Course = {
       isRequired: true,
     },
     facebookLink: { type: Url },
+    videoUrl: { type: Url },
     about: { type: Wysiwyg, isRequired: true },
     details: { type: Wysiwyg, isRequired: true },
   },
