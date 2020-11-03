@@ -335,7 +335,7 @@ exports.FAQ = {
       type: Wysiwyg,
       isRequired: true,
       editorConfig: {
-        valid_elements: 'span,p,strong,b,a,ul,li,ol,em,i',
+        valid_elements: 'span,p,strong,b,a[href|target=_blank],ul,li,ol,em,i',
         toolbar:
           'undo redo bold italic link | bullist numlist outdent indent | code',
       },
