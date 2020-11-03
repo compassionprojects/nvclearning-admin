@@ -331,7 +331,15 @@ exports.FAQ = {
       isRequired: true,
     },
     weight: { type: Integer },
-    answer: { type: Wysiwyg, isRequired: true },
+    answer: {
+      type: Wysiwyg,
+      isRequired: true,
+      editorConfig: {
+        valid_elements: 'span,p,strong,b,a,ul,li,ol,em,i',
+        toolbar:
+          'undo redo bold italic link | bullist numlist outdent indent | code',
+      },
+    },
   },
   plugins: plugins.concat(byTracking()),
 };
