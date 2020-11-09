@@ -276,7 +276,7 @@ exports.Course = {
     about: { type: Wysiwyg, isRequired: true },
     details: { type: Wysiwyg, isRequired: true },
   },
-  labelResolver: (item) => item.title,
+  labelResolver: (item) => `Course ${item.id}`,
   plugins: plugins.concat(byTracking()),
 };
 
