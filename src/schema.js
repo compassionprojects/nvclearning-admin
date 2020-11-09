@@ -312,6 +312,7 @@ exports.Order = {
     stripeCustomerId: { type: Text, isRequired: true },
     course: { type: Relationship, ref: 'Course', isRequired: true },
   },
+  labelResolver: (item) => `Order ${item.id}`,
   plugins: plugins.concat(byTracking()),
 };
 
@@ -341,5 +342,6 @@ exports.FAQ = {
       },
     },
   },
+  labelResolver: (item) => `Question ${item.id}`,
   plugins: plugins.concat(byTracking()),
 };
