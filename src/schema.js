@@ -49,6 +49,7 @@ exports.User = {
     password: {
       type: Password,
     },
+    lastLogin: { type: DateTime },
     courses: { type: Relationship, ref: 'Course', many: true },
   },
   plugins,

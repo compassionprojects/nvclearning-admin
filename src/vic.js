@@ -89,7 +89,28 @@ module.exports = class VICApp {
         action: 'acceptToken',
         allowReuse: true,
       }),
-      (req, res) => res.json({ ok: true })
+      async (req, res) => {
+        if (req.user) {
+          const query = gql`
+            mutation updateUser($id: ID!, $lastLogin: DateTime) {
+              updateUser(id: $id, data: { lastLogin: $lastLogin }) {
+                id
+              }
+            }
+          `;
+
+          const context = keystone.createContext({ skipAccessControl: true });
+          const { errors } = await keystone.executeGraphQL({
+            context,
+            query,
+            variables: { id: req.user.id, lastLogin: new Date().toISOString() },
+          });
+          if (errors) {
+            console.log('Unable to update last login');
+          }
+        }
+        res.json({ ok: true });
+      }
     );
 
     return app;
