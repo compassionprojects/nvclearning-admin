@@ -273,6 +273,7 @@ exports.Course = {
       isRequired: true,
     },
     facebookLink: { type: Url },
+    ticketUrl: { type: Url },
     videoUrl: { type: Url },
     about: { type: Wysiwyg, isRequired: true },
     details: { type: Wysiwyg, isRequired: true },
