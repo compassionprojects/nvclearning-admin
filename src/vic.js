@@ -121,7 +121,7 @@ function sendToken(user, token) {
   const url = process.env.SERVER_URL || 'http://localhost:4000';
   signin({
     to: user.email,
-    subject: 'Sign in to VIC Peacefactory',
+    subject: 'Sign in to NVC online event',
     name: user.name,
     magicLink: `${url}/auth?token=${token}`,
   });
