@@ -13,7 +13,7 @@ module.exports = ({ name, magicLink }) => `
           </p>
           Kind regards,<br>
           Natalia<br>
-          <a href="https://vic.peacefactory.fr" target="_blank">vic.peacefactory.fr</a>
+          <a href="https://vic.peacefactory.fr/signin" target="_blank">vic.peacefactory.fr/signin</a>
         </div>
       </div>
     </body>
