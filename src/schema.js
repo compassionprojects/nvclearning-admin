@@ -65,6 +65,12 @@ exports.Space = {
   fields: {
     title: { type: Text, isRequired: true },
     position: { type: Integer },
+    courses: {
+      type: Relationship,
+      ref: 'Course',
+      many: true,
+      isRequired: true,
+    },
   },
   labelResolver: (item) => item.title,
   plugins: plugins.concat(byTracking()),
@@ -79,6 +85,12 @@ exports.LibrarySection = {
   },
   fields: {
     title: { type: Text, isRequired: true },
+    courses: {
+      type: Relationship,
+      ref: 'Course',
+      many: true,
+      isRequired: true,
+    },
   },
   labelResolver: (item) => item.title,
   plugins: plugins.concat(byTracking()),
@@ -226,6 +238,12 @@ exports.MessageType = {
   },
   fields: {
     title: { type: Text, isRequired: true },
+    courses: {
+      type: Relationship,
+      ref: 'Course',
+      many: true,
+      isRequired: true,
+    },
   },
   labelResolver: (item) => item.title,
   plugins: plugins.concat(byTracking()),
