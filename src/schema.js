@@ -44,6 +44,7 @@ exports.User = {
       isRequired: true,
       access: { read: userIsAuthenticated },
     },
+    language: { type: Select, options: 'English, French' },
     disabled: { type: Checkbox },
     isAdmin: { type: Checkbox },
     password: {
