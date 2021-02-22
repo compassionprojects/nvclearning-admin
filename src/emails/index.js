@@ -18,12 +18,14 @@ function send({ to, subject, body }) {
 }
 
 module.exports = {
-  signin: function ({ user, subject, ...props }) {
+  signin: function ({ user, ...props }) {
     const to = user.email;
-    const signin = signinTemplate[user.language || 'en']; // default english
+    const lang = user.language || 'en';
+    const subject = signinTemplate.subject[lang];
+    const signin = signinTemplate[lang]; // default english
     const body = signin({
-      to,
       name: user.name,
+      lang,
       ...props,
     });
     send({

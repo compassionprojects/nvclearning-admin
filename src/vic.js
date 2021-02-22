@@ -122,7 +122,6 @@ function sendToken(user, token) {
   const url = process.env.SERVER_URL || 'http://localhost:4000';
   signin({
     user,
-    subject: 'Sign in to NVC online event',
     magicLink: `${url}/auth?token=${token}`,
   });
 }
