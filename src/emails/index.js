@@ -1,5 +1,5 @@
 const postmark = require('postmark');
-const signin = require('./sign-in');
+const signinTemplate = require('./sign-in');
 const isProduction = process.env.NODE_ENV === 'production';
 
 const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
@@ -18,8 +18,14 @@ function send({ to, subject, body }) {
 }
 
 module.exports = {
-  signin: function ({ to, subject, ...props }) {
-    const body = signin({ to, ...props });
+  signin: function ({ user, subject, ...props }) {
+    const to = user.email;
+    const signin = signinTemplate[user.language || 'en']; // default english
+    const body = signin({
+      to,
+      name: user.name,
+      ...props,
+    });
     send({
       to,
       subject,

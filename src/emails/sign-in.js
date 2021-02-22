@@ -1,6 +1,8 @@
 const React = require('react'); // eslint-disable-line
 
-module.exports = ({ name, magicLink }) => `
+module.exports = {
+  // English template
+  en: ({ name, magicLink }) => `
   <html>
     <body>
         <p>Dear ${name},</p>
@@ -9,12 +11,33 @@ module.exports = ({ name, magicLink }) => `
             We are delighted to send you this <a href="${magicLink}" target="_blank">magic link</a> so that you can sign in to Peace Factory’s virtual exchange platform in preparation for the NVC course.
           </p>
           <p>
-            If you have trouble using this link or if you’re dissatisfied with our answers to the frequently asked questions which you’ll see on the platform, please do let us know by responding to this email and we will do our very best to support you.
+            If you have trouble using this link or if you’re dissatisfied with the platform, please do let us know by responding to this email and we will do our very best to support you.
           </p>
           Kind regards,<br>
-          Natalia<br>
+          Louise<br>
           <a href="https://vic.peacefactory.fr/signin" target="_blank">vic.peacefactory.fr/signin</a>
         </div>
       </div>
     </body>
-  </html>`;
+  </html>`,
+
+  // French template
+  fr: ({ name, magicLink }) => `
+  <html>
+    <body>
+        <p>Dear ${name},</p>
+        <div>
+          <p>
+            Nous sommes ravis de vous envoyer ce <a href="${magicLink}" target="_blank"> lien magique </a> afin que vous puissiez vous connecter à la plate-forme d'échange virtuel de Peace Factory en préparation du cours NVC.
+          </p>
+          <p>
+            Si vous rencontrez des difficultés pour utiliser ce lien ou si vous n'êtes pas satisfait de la plate-forme, veuillez nous le faire savoir en répondant à cet e-mail et nous ferons de notre mieux pour vous aider.
+          </p>
+          Cordialement, <br>
+          Louise <br>
+          <a href="https://vic.peacefactory.fr/signin" target="_blank">vic.peacefactory.fr/signin</a>
+        </div>
+      </div>
+    </body>
+  </html>`,
+};

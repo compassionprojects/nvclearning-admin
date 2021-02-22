@@ -55,6 +55,7 @@ module.exports = class VICApp {
             id
             email
             name
+            language
           }
         }
       `;
@@ -120,9 +121,8 @@ module.exports = class VICApp {
 function sendToken(user, token) {
   const url = process.env.SERVER_URL || 'http://localhost:4000';
   signin({
-    to: user.email,
+    user,
     subject: 'Sign in to NVC online event',
-    name: user.name,
     magicLink: `${url}/auth?token=${token}`,
   });
 }
@@ -137,6 +137,7 @@ async function verifyUser(user, keystone) {
           id
           email
           name
+          language
         }
       }
     `,
