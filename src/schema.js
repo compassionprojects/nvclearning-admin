@@ -28,6 +28,7 @@ const plugins = [atTracking(dateFormat)];
  * Schemas
  */
 
+// user schema
 exports.User = {
   access: {
     read: userIsAuthenticated,
