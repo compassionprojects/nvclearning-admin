@@ -1,3 +1,9 @@
+## Tech stack
+
+- Node.js
+- KeystoneJS
+- GraphQL
+
 ## Development
 
 We use docker for development. To start run
