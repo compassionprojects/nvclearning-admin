@@ -167,7 +167,7 @@ exports.Attachment = {
   fields: {
     file: { type: File, adapter: fileAdapter },
   },
-  labelResolver: (item) => `Attachment ${item.id}`,
+  labelResolver: (item) => `File ${item.id} - ${item.file.originalFilename}`,
   access: {
     read: true,
     update: userIsAdmin,

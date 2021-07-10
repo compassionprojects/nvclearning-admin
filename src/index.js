@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const session = require('express-session');
 const { Keystone } = require('@keystonejs/keystone');
 const { GraphQLApp } = require('@keystonejs/app-graphql');
