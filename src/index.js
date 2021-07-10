@@ -78,6 +78,7 @@ module.exports = {
     new VICApp(),
     new GraphQLApp({ apollo: { cors } }),
     new AdminUIApp({
+      name: 'Virtual Intensive Course - NVC',
       enableDefaultRoute: false,
       authStrategy,
       isAccessAllowed: ({ authentication: { item: user } }) =>
