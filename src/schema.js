@@ -2,6 +2,7 @@ const {
   Select,
   Integer,
   Url,
+  File,
   Text,
   Relationship,
   Checkbox,
@@ -23,6 +24,33 @@ const userIsAuthenticated = ({ authentication: { item } }) => Boolean(item);
 
 const dateFormat = { format: 'dd/MM/yyyy h:mm a' };
 const plugins = [atTracking(dateFormat)];
+
+const { S3Adapter } = require('@keystonejs/file-adapters');
+
+const endpoint = process.env.DO_ENDPOINT;
+const S3_PATH = 'staging';
+
+const fileAdapter = new S3Adapter({
+  bucket: process.env.DO_BUCKET,
+  folder: S3_PATH,
+  publicUrl: (file) => {
+    const { _meta } = file;
+    return _meta && _meta.Location;
+  },
+  s3Options: {
+    // Optional paramaters to be supplied directly to AWS.S3 constructor
+    // apiVersion: '2006-03-01',
+    accessKeyId: process.env.DO_KEY,
+    secretAccessKey: process.env.DO_SECRET,
+    endpoint,
+  },
+  uploadParams: ({ id }) => ({
+    ACL: 'public-read',
+    Metadata: {
+      keystone_id: `${id}`,
+    },
+  }),
+});
 
 /**
  * Schemas
@@ -135,6 +163,80 @@ exports.Content = {
   },
 };
 
+exports.Attachment = {
+  fields: {
+    file: { type: File, adapter: fileAdapter },
+  },
+  labelResolver: (item) => `Attachment ${item.id}`,
+  access: {
+    read: true,
+    update: userIsAdmin,
+    create: userIsAuthenticated,
+    delete: userIsAdmin,
+  },
+  plugins: plugins.concat(byTracking()),
+  adminConfig: {
+    defaultColumns: 'url, createdBy, createdAt',
+    defaultSort: 'createdAt',
+  },
+};
+
+exports.Room = {
+  fields: {
+    title: { type: Text, isRequired: true },
+    link: { type: Url, isRequired: true },
+  },
+  labelResolver: (item) => item.title,
+  access: {
+    read: true,
+    update: userIsAdmin,
+    create: userIsAuthenticated,
+    delete: userIsAdmin,
+  },
+  plugins: plugins.concat(byTracking()),
+  adminConfig: {
+    defaultColumns: 'title, link, createdBy',
+    defaultSort: 'createdAt',
+  },
+};
+
+exports.Session = {
+  access: {
+    read: true,
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
+  labelResolver: (item) => item.title,
+  fields: {
+    title: { type: Text, isRequired: true },
+    course: { type: Relationship, ref: 'Course', isRequired: true },
+    description: {
+      type: Wysiwyg,
+      editorConfig: {
+        block_formats: 'Paragraph=p;',
+      },
+    },
+    attachments: { type: Relationship, ref: 'Attachment', many: true },
+    trainers: { type: Relationship, ref: 'Trainer', many: true },
+    date: {
+      type: DateTime,
+      isRequired: true,
+      format: 'dd/MM/yyyy HH:mm O',
+      yearRangeFrom: new Date().getFullYear(),
+      yearRangeTo: new Date().getFullYear() + 1,
+      yearPickerType: 'auto',
+    },
+    room: { type: Relationship, ref: 'Room', isRequired: true },
+    videoRecordingUrl: { type: Url },
+  },
+  plugins: plugins.concat(byTracking()),
+  adminConfig: {
+    defaultColumns: 'date, trainers, course',
+    defaultSort: 'date',
+  },
+};
+
 exports.Schedule = {
   access: {
     read: true,
@@ -189,7 +291,7 @@ exports.Message = {
     },
     replies: { type: Relationship, ref: 'Message', many: true },
     parent: { type: Relationship, ref: 'Message' },
-    orphaned: { type: Boolean },
+    orphaned: { type: Checkbox },
     course: { type: Relationship, ref: 'Course', isRequired: true },
   },
   labelResolver: (item) => `Message ${item.id}`,
@@ -304,7 +406,7 @@ exports.Course = {
     about: { type: Wysiwyg, isRequired: true },
     details: { type: Wysiwyg, isRequired: true },
   },
-  labelResolver: (item) => `Course ${item.id}`,
+  labelResolver: (item) => item.title,
   plugins: plugins.concat(byTracking()),
 };
 
