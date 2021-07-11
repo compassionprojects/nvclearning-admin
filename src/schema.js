@@ -28,11 +28,10 @@ const plugins = [atTracking(dateFormat)];
 const { S3Adapter } = require('@keystonejs/file-adapters');
 
 const endpoint = process.env.DO_ENDPOINT;
-const S3_PATH = 'staging';
 
 const fileAdapter = new S3Adapter({
   bucket: process.env.DO_BUCKET,
-  folder: S3_PATH,
+  folder: process.env.NODE_ENV,
   publicUrl: (file) => {
     const { _meta } = file;
     return _meta && _meta.Location;
@@ -89,78 +88,6 @@ exports.User = {
     courses: { type: Relationship, ref: 'Course', many: true },
   },
   plugins,
-};
-
-exports.Space = {
-  access: {
-    read: userIsAuthenticated,
-    create: userIsAdmin,
-    update: userIsAdmin,
-    delete: userIsAdmin,
-  },
-  fields: {
-    title: { type: Text, isRequired: true },
-    position: { type: Integer },
-    courses: {
-      type: Relationship,
-      ref: 'Course',
-      many: true,
-      isRequired: true,
-    },
-  },
-  labelResolver: (item) => item.title,
-  plugins: plugins.concat(byTracking()),
-};
-
-exports.LibrarySection = {
-  access: {
-    read: userIsAuthenticated,
-    create: userIsAdmin,
-    update: userIsAdmin,
-    delete: userIsAdmin,
-  },
-  fields: {
-    title: { type: Text, isRequired: true },
-    courses: {
-      type: Relationship,
-      ref: 'Course',
-      many: true,
-      isRequired: true,
-    },
-  },
-  labelResolver: (item) => item.title,
-  plugins: plugins.concat(byTracking()),
-};
-
-exports.Content = {
-  access: {
-    read: true,
-    create: userIsAdmin,
-    update: userIsAdmin,
-    delete: userIsAdmin,
-  },
-  fields: {
-    title: { type: Text, isRequired: true },
-    description: {
-      type: Wysiwyg,
-      isRequired: true,
-      editorConfig: {
-        block_formats: 'Paragraph=p;',
-      },
-    },
-    url: { type: Url },
-    contentType: { type: Select, options: 'image, video, document' },
-    courses: { type: Relationship, ref: 'Course', many: true },
-    librarySection: { type: Relationship, ref: 'LibrarySection' },
-    space: { type: Relationship, ref: 'Space' },
-    callToActionTitle: { type: Text },
-    callToActionUrl: { type: Url },
-  },
-  plugins: plugins.concat(byTracking()),
-  adminConfig: {
-    defaultColumns: 'title, contentType, librarySection, space, updatedAt',
-    defaultSort: 'createdAt',
-  },
 };
 
 exports.Attachment = {
@@ -235,25 +162,6 @@ exports.Session = {
     defaultColumns: 'date, trainers, course',
     defaultSort: 'date',
   },
-};
-
-exports.Schedule = {
-  access: {
-    read: true,
-    create: userIsAdmin,
-    update: userIsAdmin,
-    delete: userIsAdmin,
-  },
-  fields: {
-    course: { type: Relationship, ref: 'Course', isRequired: true },
-    description: {
-      type: Wysiwyg,
-      editorConfig: {
-        block_formats: 'Paragraph=p;',
-      },
-    },
-  },
-  plugins: plugins.concat(byTracking()),
 };
 
 exports.Card = {
@@ -359,6 +267,7 @@ exports.MessageType = {
   plugins: plugins.concat(byTracking()),
 };
 
+// @todo - rename them to hosts or session hosts
 exports.Trainer = {
   access: {
     read: true,
@@ -368,11 +277,16 @@ exports.Trainer = {
   },
   fields: {
     name: { type: Text, isRequired: true },
-    avatar_url: { type: Url },
+    avatar_url: { type: Url }, // @todo remove field
+    attachment: { type: Relationship, ref: 'Attachment' },
     bio: { type: Wysiwyg, isRequired: true },
   },
   labelResolver: (item) => item.name,
   plugins: plugins.concat(byTracking()),
+  adminConfig: {
+    defaultColumns: 'attachment',
+    defaultSort: 'created_at',
+  },
 };
 
 exports.Course = {
@@ -473,5 +387,100 @@ exports.FAQ = {
     },
   },
   labelResolver: (item) => `Question ${item.id}`,
+  plugins: plugins.concat(byTracking()),
+};
+
+// the below are deprecated and not used any more. they are still
+// kept to support older courses
+// If one decides to remove this, make sure to also modify the frontend
+
+exports.Space = {
+  access: {
+    read: userIsAuthenticated,
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
+  fields: {
+    title: { type: Text, isRequired: true },
+    position: { type: Integer },
+    courses: {
+      type: Relationship,
+      ref: 'Course',
+      many: true,
+      isRequired: true,
+    },
+  },
+  labelResolver: (item) => item.title,
+  plugins: plugins.concat(byTracking()),
+};
+
+exports.LibrarySection = {
+  access: {
+    read: userIsAuthenticated,
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
+  fields: {
+    title: { type: Text, isRequired: true },
+    courses: {
+      type: Relationship,
+      ref: 'Course',
+      many: true,
+      isRequired: true,
+    },
+  },
+  labelResolver: (item) => item.title,
+  plugins: plugins.concat(byTracking()),
+};
+
+exports.Content = {
+  access: {
+    read: true,
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
+  fields: {
+    title: { type: Text, isRequired: true },
+    description: {
+      type: Wysiwyg,
+      isRequired: true,
+      editorConfig: {
+        block_formats: 'Paragraph=p;',
+      },
+    },
+    url: { type: Url },
+    contentType: { type: Select, options: 'image, video, document' },
+    courses: { type: Relationship, ref: 'Course', many: true },
+    librarySection: { type: Relationship, ref: 'LibrarySection' },
+    space: { type: Relationship, ref: 'Space' },
+    callToActionTitle: { type: Text },
+    callToActionUrl: { type: Url },
+  },
+  plugins: plugins.concat(byTracking()),
+  adminConfig: {
+    defaultColumns: 'title, contentType, librarySection, space, updatedAt',
+    defaultSort: 'createdAt',
+  },
+};
+
+exports.Schedule = {
+  access: {
+    read: true,
+    create: userIsAdmin,
+    update: userIsAdmin,
+    delete: userIsAdmin,
+  },
+  fields: {
+    course: { type: Relationship, ref: 'Course', isRequired: true },
+    description: {
+      type: Wysiwyg,
+      editorConfig: {
+        block_formats: 'Paragraph=p;',
+      },
+    },
+  },
   plugins: plugins.concat(byTracking()),
 };
