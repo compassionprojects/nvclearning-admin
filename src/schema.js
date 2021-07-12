@@ -146,21 +146,27 @@ exports.Session = {
     },
     attachments: { type: Relationship, ref: 'Attachment', many: true },
     trainers: { type: Relationship, ref: 'Trainer', many: true },
-    date: {
+    startDateTime: {
       type: DateTime,
       isRequired: true,
       format: 'dd/MM/yyyy HH:mm O',
       yearRangeFrom: new Date().getFullYear(),
       yearRangeTo: new Date().getFullYear() + 1,
-      yearPickerType: 'auto',
+    },
+    endDateTime: {
+      type: DateTime,
+      isRequired: true,
+      format: 'dd/MM/yyyy HH:mm O',
+      yearRangeFrom: new Date().getFullYear(),
+      yearRangeTo: new Date().getFullYear() + 1,
     },
     room: { type: Relationship, ref: 'Room', isRequired: true },
     videoRecordingUrl: { type: Url },
   },
   plugins: plugins.concat(byTracking()),
   adminConfig: {
-    defaultColumns: 'date, trainers, course',
-    defaultSort: 'date',
+    defaultColumns: 'startDateTime, room, trainers, course, endDateTime',
+    defaultSort: 'startDateTime',
   },
 };
 
@@ -284,8 +290,8 @@ exports.Trainer = {
   labelResolver: (item) => item.name,
   plugins: plugins.concat(byTracking()),
   adminConfig: {
-    defaultColumns: 'attachment',
-    defaultSort: 'created_at',
+    defaultColumns: 'createdAt',
+    defaultSort: 'createdAt',
   },
 };
 
@@ -322,6 +328,10 @@ exports.Course = {
   },
   labelResolver: (item) => item.title,
   plugins: plugins.concat(byTracking()),
+  adminConfig: {
+    defaultSort: '-dateStart',
+    defaultColumns: 'dateStart, dateEnd',
+  },
 };
 
 exports.Pricing = {
