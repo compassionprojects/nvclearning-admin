@@ -160,7 +160,7 @@ exports.Session = {
       yearRangeFrom: new Date().getFullYear(),
       yearRangeTo: new Date().getFullYear() + 1,
     },
-    room: { type: Relationship, ref: 'Room', isRequired: true },
+    room: { type: Relationship, ref: 'Room' },
     videoRecordingUrl: { type: Url },
   },
   plugins: plugins.concat(byTracking()),
