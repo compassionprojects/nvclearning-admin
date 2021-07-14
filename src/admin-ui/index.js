@@ -27,7 +27,7 @@ export default {
       label: 'People',
       children: [
         { listKey: 'User' },
-        { listKey: 'Trainer', label: 'Session Hosts' },
+        { listKey: 'Trainer', label: 'Presenters' },
       ],
     },
     {
