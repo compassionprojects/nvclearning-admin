@@ -20,6 +20,7 @@ export default {
         'Order',
         'Pricing',
         'Card',
+        'Attachment',
       ],
     },
     {
