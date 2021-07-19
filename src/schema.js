@@ -368,6 +368,71 @@ exports.Order = {
   },
   labelResolver: (item) => `Order ${item.id}`,
   plugins: plugins.concat(byTracking()),
+  hooks: {
+    async afterChange({ context, originalInput }) {
+      const { errors } = await context.executeGraphQL({
+        context: context.createContext({ skipAccessControl: true }),
+        query: gql`
+          mutation createUser($name: String, $email: String, $course: ID!) {
+            createUser(
+              data: {
+                name: $name
+                isAdmin: true
+                email: $email
+                courses: { connect: { id: $course } }
+              }
+            ) {
+              id
+            }
+          }
+        `,
+        variables: {
+          email: originalInput.stripeCustomerEmail,
+          course: originalInput.course.connect.id,
+          name: originalInput.stripeCustomerEmail.split('@')[0],
+        },
+      });
+
+      const [err] = errors || [];
+      // if user exists, update user by adding the course to users account
+      if (err && err.message && err.message.includes('user_email_unique')) {
+        const { data } = await context.executeGraphQL({
+          context: context.createContext({ skipAccessControl: true }),
+          query: gql`
+            query allUsers($email: String) {
+              allUsers(where: { email: $email }) {
+                id
+              }
+            }
+          `,
+          variables: {
+            email: originalInput.stripeCustomerEmail,
+          },
+        });
+
+        // user exists, try and update his record to add the new course
+        const { errors } = await context.executeGraphQL({
+          context: context.createContext({ skipAccessControl: true }),
+          query: gql`
+            mutation updateUser($id: ID!, $course: ID!) {
+              updateUser(
+                id: $id
+                data: { courses: { connect: { id: $course } } }
+              ) {
+                id
+              }
+            }
+          `,
+          variables: {
+            id: data.allUsers[0].id,
+            course: originalInput.course.connect.id,
+          },
+        });
+
+        if (errors) throw errors;
+      }
+    },
+  },
 };
 
 exports.FAQ = {
