@@ -26,6 +26,8 @@ services:
     restart: always
     networks:
       - webnet
+    ports:
+      - 5439:5432
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
