@@ -144,7 +144,13 @@ exports.Session = {
         block_formats: 'Paragraph=p;',
       },
     },
-    attachments: { type: Relationship, ref: 'Attachment', many: true },
+    attachments: {
+      type: Relationship,
+      ref: 'Attachment',
+      many: true,
+      adminDoc:
+        'Any documents/photos related to the session can be attached here',
+    },
     trainers: { type: Relationship, ref: 'Trainer', many: true },
     startDateTime: {
       type: DateTime,
@@ -152,6 +158,8 @@ exports.Session = {
       format: 'dd/MM/yyyy HH:mm O',
       yearRangeFrom: new Date().getFullYear(),
       yearRangeTo: new Date().getFullYear() + 1,
+      adminDoc:
+        'Session start date time in the format "1:00 PM 4th July 2021 +02:00"',
     },
     endDateTime: {
       type: DateTime,
@@ -159,6 +167,8 @@ exports.Session = {
       format: 'dd/MM/yyyy HH:mm O',
       yearRangeFrom: new Date().getFullYear(),
       yearRangeTo: new Date().getFullYear() + 1,
+      adminDoc:
+        'Session end date time in the format "1:00 PM 4th July 2021 +02:00"',
     },
     room: { type: Relationship, ref: 'Room' },
     videoRecordingUrl: { type: Url },
@@ -320,9 +330,16 @@ exports.Course = {
       many: true,
       isRequired: true,
     },
-    facebookLink: { type: Url },
-    ticketUrl: { type: Url },
-    videoUrl: { type: Url },
+    facebookLink: {
+      type: Url,
+      adminDoc: 'Facebook event link so that people can rsvp',
+    },
+    ticketUrl: {
+      type: Url,
+      adminDoc:
+        'In case you are using an external platform for ticketing, enter the url where people can buy tickets',
+    },
+    videoUrl: { type: Url, adminDoc: 'Promotion video link' },
     about: { type: Wysiwyg, isRequired: true },
     details: { type: Wysiwyg, isRequired: true },
   },
