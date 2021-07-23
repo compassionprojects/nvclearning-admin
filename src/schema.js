@@ -330,6 +330,10 @@ exports.Course = {
       many: true,
       isRequired: true,
     },
+    communityRoomLink: {
+      type: Url,
+      adminDoc: 'Community room link where people can hangout or ask for help',
+    },
     facebookLink: {
       type: Url,
       adminDoc: 'Facebook event link so that people can rsvp',
