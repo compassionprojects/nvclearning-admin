@@ -322,6 +322,7 @@ exports.Course = {
         toolbar: 'undo redo code',
       },
     },
+    cancelled: { type: Checkbox },
     dateStart: { type: DateTime, isRequired: true },
     dateEnd: { type: DateTime, isRequired: true },
     trainers: {
