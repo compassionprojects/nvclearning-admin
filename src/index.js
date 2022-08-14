@@ -25,7 +25,7 @@ const {
 } = require('./schema');
 
 const PROJECT_NAME = 'Events admin';
-const EventsApp = require('./vic');
+const Auth = require('./auth');
 const knexOptions = require('./knexfile');
 const adapterConfig = { knexOptions };
 const KnexSessionStore = require('connect-session-knex')(session);
@@ -80,7 +80,7 @@ module.exports = {
   keystone,
   cors,
   apps: [
-    new EventsApp(),
+    new Auth(),
     new GraphQLApp({ apollo: { cors } }),
     new AdminUIApp({
       name: 'Events Admin',

@@ -6,7 +6,7 @@ const MagicLinkStrategy = require('passport-magic-link').Strategy;
 const { signin } = require('./emails');
 const { gql } = require('apollo-server-express');
 
-module.exports = class VICApp {
+module.exports = class Auth {
   prepareMiddleware({ keystone }) {
     const app = express();
 

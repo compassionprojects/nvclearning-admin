@@ -1,5 +1,5 @@
 const React = require('react'); // eslint-disable-line
-
+const host = process.env.SERVER_URL;
 // todo: use i18n
 
 module.exports = {
@@ -21,8 +21,8 @@ module.exports = {
             If you have trouble using this link or if you’re dissatisfied with the platform, please do let us know by responding to this email and we will do our very best to support you.
           </p>
           Kind regards,<br>
-          VIC Team<br>
-          <a href="https://vic-web.herokuapp.com/en/signin" target="_blank">vic-web.herokuapp.com/en/signin</a>
+          Events Team<br>
+          <a href="${host}/en/signin" target="_blank">${host}/en/signin</a>
         </div>
       </div>
     </body>
