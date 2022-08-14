@@ -1,14 +1,14 @@
 {
-  "name": "vic",
-  "description": "Virtual Intensive Course backend platform",
+  "name": "cp-events-admin",
+  "description": "Events, workshops and courses platform admin/backend/cms",
   "private": true,
   "version": "5.0.7",
   "author": "Madhusudhan Srinivasa <madhu@nomaddev.co>",
-  "repository": "https://github.com/keystonejs/keystone/tree/master/packages/create-keystone-app/example-projects/blank",
-  "homepage": "https://github.com/keystonejs/keystone",
+  "repository": "https://github.com/compassionprojects/events-admin/",
+  "homepage": "https://github.com/compassionprojects/events-admin#readme",
   "license": "MIT",
   "engines": {
-    "node": "12.16.1"
+    "node": "16.x"
   },
   "scripts": {
     "dev": "nodemon --exec 'knex migrate:latest && keystone dev'",

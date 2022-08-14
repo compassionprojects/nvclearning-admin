@@ -1,7 +1,10 @@
 {
-  "name": "vic-backend-dev",
+  "name": "cp-events-admin-wrapper",
   "version": "1.0.0",
-  "description": "VIC backend development",
+  "description": "Wrapper for events-admin",
+  "author": "Madhusudhan Srinivasa <madhu@nomaddev.co>",
+  "repository": "https://github.com/compassionprojects/events-admin/",
+  "homepage": "https://github.com/compassionprojects/events-admin#readme",
   "main": "index.js",
   "dependencies": {
     "husky": "~4.2.5",
@@ -27,6 +30,5 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Madhusudhan Srinivasa <madhu@nomaddev.co>",
   "license": "ISC"
 }
