@@ -1,7 +1,7 @@
 import React from 'react'; // eslint-disable-line
 
 function Logo() { // eslint-disable-line
-  return <img src="https://vic-web.herokuapp.com/images/logo.svg" />;
+  return null;
 }
 
 export default {

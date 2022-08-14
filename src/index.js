@@ -24,8 +24,8 @@ const {
   Room,
 } = require('./schema');
 
-const PROJECT_NAME = 'vic';
-const VICApp = require('./vic');
+const PROJECT_NAME = 'Events admin';
+const EventsApp = require('./vic');
 const knexOptions = require('./knexfile');
 const adapterConfig = { knexOptions };
 const KnexSessionStore = require('connect-session-knex')(session);
@@ -80,10 +80,10 @@ module.exports = {
   keystone,
   cors,
   apps: [
-    new VICApp(),
+    new EventsApp(),
     new GraphQLApp({ apollo: { cors } }),
     new AdminUIApp({
-      name: 'Virtual Intensive Course - NVC',
+      name: 'Events Admin',
       enableDefaultRoute: false,
       authStrategy,
       isAccessAllowed: ({ authentication: { item: user } }) =>
