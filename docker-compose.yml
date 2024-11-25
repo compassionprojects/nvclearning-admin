@@ -1,5 +1,3 @@
-version: "3.2"
-
 services:
   api:
     build:
@@ -14,10 +12,10 @@ services:
     ports:
       - 3000:3000
     networks:
+
       - webnet
     depends_on:
       - db
-
   db:
     image: postgres:11
     volumes:
