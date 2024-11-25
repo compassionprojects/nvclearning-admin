@@ -10,7 +10,9 @@ We use docker for development. To start run
 
 ```sh
 npm i # for enabling code formatting and linting
-docker-compose -d
+cp .env.example .env
+# update ADMIN_EMAIL, ADMIN_PASSWORD and DO_BUCKET env variables
+docker-compose up -d
 ```
 
 Then visit localhost:3000
