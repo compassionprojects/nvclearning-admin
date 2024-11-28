@@ -34,24 +34,25 @@
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "express-session": "^1.17.2",
+    "husky": "~4.2.5",
     "knex": "^0.95.6",
+    "lint-staged": "~10.2.11",
     "moment": "^2.29.1",
     "passport": "^0.4.1",
     "passport-magic-link": "^2.1.0",
     "postmark": "^2.7.6",
     "react": "^17.0.2",
-    "uuid": "^8.3.2",
-    "husky": "~4.2.5",
-    "lint-staged": "~10.2.11"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "dotenv": "~10.0.0",
-    "nodemon": "^2.0.10",
-    "npm-check-updates": "^11.8.2",
+    "@flydotio/dockerfile": "^0.5.9",
     "babel-eslint": "~10.1.0",
+    "dotenv": "~10.0.0",
     "eslint": "~7.4.0",
     "eslint-config-prettier": "~6.11.0",
     "eslint-plugin-prettier": "~3.1.4",
+    "nodemon": "^2.0.10",
+    "npm-check-updates": "^11.8.2",
     "prettier": "~2.0.5"
   },
   "husky": {

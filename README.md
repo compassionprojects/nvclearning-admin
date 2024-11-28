@@ -56,3 +56,4 @@ alias dc="docker-compose"
 
 ## Deployment
 
+We use [fly.io](https://fly.io) to deploy using github actions. You may get access from [@madhums](https://github.com/madhums)
