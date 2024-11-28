@@ -1,6 +1,6 @@
 FROM node:16-alpine
 
-COPY src /app
+COPY . /app
 WORKDIR /app
 
 RUN apk add --no-cache build-base python3 bash yarn git && \
