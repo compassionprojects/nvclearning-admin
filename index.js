@@ -24,7 +24,7 @@ const {
   Room,
 } = require('./schema');
 
-const PROJECT_NAME = 'Events admin';
+const PROJECT_NAME = 'NVC Learning';
 const Auth = require('./auth');
 const knexOptions = require('./knexfile');
 const adapterConfig = { knexOptions };
@@ -86,7 +86,7 @@ module.exports = {
     new Auth(),
     new GraphQLApp({ apollo: { cors } }),
     new AdminUIApp({
-      name: 'Events Admin',
+      name: 'NVC Learning Admin',
       enableDefaultRoute: false,
       authStrategy,
       isAccessAllowed: ({ authentication: { item: user } }) =>
