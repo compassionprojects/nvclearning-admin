@@ -74,7 +74,7 @@ const authStrategy = keystone.createAuthStrategy({
 const cors = {
   origin: [
     process.env.SERVER_URL,
-    process.env.SERVER_URL.replace('https', 'http'),
+    // process.env.SERVER_URL.replace('https', 'http'), // don't support cors over http
   ],
   credentials: true,
 };
