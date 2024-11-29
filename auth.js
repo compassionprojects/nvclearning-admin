@@ -16,7 +16,7 @@ module.exports = class Auth {
           secret: process.env.TOKEN_SECRET,
           userFields: ['email'],
           tokenField: 'token',
-          ttl: process.env.AUTH_TOKEN_EXPIRY,
+          ttl: parseInt(process.env.AUTH_TOKEN_EXPIRY),
         },
         sendToken,
         (user) => verifyUser(user, keystone)
