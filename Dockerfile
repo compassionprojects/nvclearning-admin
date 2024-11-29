@@ -34,6 +34,7 @@ ENV DO_BUCKET="dummy"
 ENV COOKIE_SECRET="dummy"
 ENV POSTMARK_API_KEY="dummy"
 ENV BUILD_STAGE=true
+RUN npx browserslist@latest --update-db
 RUN yarn run build
 
 # Remove development dependencies
