@@ -39,10 +39,13 @@ const keystone = new Keystone({
     secure: isProduction,
   },
   adapter: new Adapter(adapterConfig),
-  sessionStore: new KnexSessionStore({
-    knex: require('knex')(knexOptions),
-    tablename: 'user_sessions', // optional. Defaults to 'sessions'
-  }),
+  sessionStore:
+    process.env.BUILD_STAGE !== undefined
+      ? undefined
+      : new KnexSessionStore({
+          knex: require('knex')(knexOptions),
+          tablename: 'user_sessions', // optional. Defaults to 'sessions'
+        }),
 });
 
 // create our app entities

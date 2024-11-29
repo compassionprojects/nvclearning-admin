@@ -30,11 +30,13 @@ RUN yarn install --frozen-lockfile --production=false
 COPY . .
 
 # Build application
+ENV DO_BUCKET="dummy"
+ENV COOKIE_SECRET="dummy"
+ENV BUILD_STAGE=true
 RUN yarn run build
 
 # Remove development dependencies
 RUN yarn install --production=true
-
 
 # Final stage for app image
 FROM base
