@@ -32,6 +32,7 @@ COPY . .
 # Build application
 ENV DO_BUCKET="dummy"
 ENV COOKIE_SECRET="dummy"
+ENV POSTMARK_API_KEY="dummy"
 ENV BUILD_STAGE=true
 RUN yarn run build
 
