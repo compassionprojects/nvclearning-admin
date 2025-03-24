@@ -1,10 +1,11 @@
 const React = require('react'); // eslint-disable-line
 const host = process.env.SERVER_URL;
+const { APP_NAME } = require('../constants');
 // todo: use i18n
 
 module.exports = {
   subject: {
-    en: 'Sign in to NVC Virtual Platform',
+    en: `Sign in to ${APP_NAME}`,
     fr: 'Connectez-vous à la CNV Virtual Plateforme',
   },
 
@@ -21,7 +22,7 @@ module.exports = {
             If you have trouble using this link or if you’re dissatisfied with the platform, please do let us know by responding to this email and we will do our very best to support you.
           </p>
           Kind regards,<br>
-          Events Team<br>
+          ${APP_NAME} Team<br>
           <a href="${host}/en/signin" target="_blank">${host}/en/signin</a>
         </div>
       </div>
@@ -41,8 +42,8 @@ module.exports = {
             Si vous rencontrez des difficultés pour utiliser ce lien ou si vous n'êtes pas satisfait de la plate-forme, veuillez nous le faire savoir en répondant à cet e-mail et nous ferons de notre mieux pour vous aider.
           </p>
           Cordialement, <br>
-          VIC Team <br>
-          <a href="https://vic-web.herokuapp.com/fr/signin" target="_blank">vic-web.herokuapp.com/fr/signin</a>
+          ${APP_NAME} Team<br>
+          <a href="${host}/en/signin" target="_blank">${host}/en/signin</a>
         </div>
       </div>
     </body>

@@ -23,8 +23,8 @@ const {
   Session,
   Room,
 } = require('./schema');
+const { APP_NAME } = require('./constants');
 
-const PROJECT_NAME = 'NVC Learning';
 const Auth = require('./auth');
 const knexOptions = require('./knexfile');
 const adapterConfig = { knexOptions };
@@ -33,7 +33,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 // Init keystone
 const keystone = new Keystone({
-  name: PROJECT_NAME,
+  name: APP_NAME,
   cookieSecret: process.env.COOKIE_SECRET,
   cookie: {
     secure: isProduction,
